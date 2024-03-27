@@ -12,7 +12,7 @@ namespace args_parse {
 		bool Matches(const std::string& arg);
 
 		///ѕолучение булевого значени€ аргумента
-		bool getValue() const;
+		bool getValue();
 
 		///ѕрисваивание булевого значени€ аргументу
 		void setValue(bool value);

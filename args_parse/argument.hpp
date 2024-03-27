@@ -19,9 +19,6 @@ namespace args_parse {
 			/// ¬озвращает булевое значение
 			virtual bool Matches(const std::string& arg) const;
 
-			/// ѕроверка был ли определен аргумент
-			bool IsDefined() const;
-
 			/// @brief get() дл€ получени€ значени€ пол€, соответстующего в классе
 			std::string GetLongName() const;
 
@@ -39,6 +36,9 @@ namespace args_parse {
 
 			/// @brief ћетод set() дл€ присваивани€ значени€ полю, соответстующему в классе
 			void SetDescription(const std::string& description);
+
+			/// ѕроверка был ли определен аргумент
+			bool IsDefined() const;
 
 		protected:
 			/// ороткое описание аргумента

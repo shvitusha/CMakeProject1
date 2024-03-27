@@ -18,7 +18,7 @@ namespace args_parse {
 		return false;
 	}
 
-	int IntArg::getValue() const { return _value; }
+	int IntArg::getValue() { return _value; }
 
 	void IntArg::setValue(int value) { _value = value; }
 }

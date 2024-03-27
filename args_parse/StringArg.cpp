@@ -18,7 +18,7 @@ namespace args_parse {
 		return false;
 	}
 
-	std::string StringArg::getValue() const { return _value; }
+	std::string StringArg::getValue() { return _value; }
 
 	void StringArg::setValue(std::string value) { _value = value; }
 }

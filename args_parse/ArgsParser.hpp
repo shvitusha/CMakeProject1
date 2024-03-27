@@ -16,9 +16,18 @@ namespace args_parse {
 		/// ќн проходит по каждому аргументу командной строки и провер€ет, был ли найден аргумент в векторе
 		bool Parse();
 
+		/// @brief ƒеструктор
+		~ArgsParser();
+
 		/// @brief ћетод дл€ вывода справки об использовании программы.
 		/// ¬ыводит описание всех добавленных аргументов командной строки
 		void ShowHelp();
+
+		Argument FindLongNameArg(std::string item, std::string& value) const;
+
+		Argument FindShortNameArg(std::string item, std::string& value) const;
+
+		std::string IsOperator(std::string operatString);
 
 	private:
 		/// —колько всего аргументов.

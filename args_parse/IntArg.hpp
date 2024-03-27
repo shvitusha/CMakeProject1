@@ -19,7 +19,7 @@ namespace args_parse {
 		bool Matches(const std::string& arg);
 
 		///ѕолучение числового значени€ аргумента
-		int getValue() const;
+		int getValue();
 
 		///ѕрисваивание числового значени€ аргументу
 		void setValue(int value);
