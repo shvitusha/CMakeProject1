@@ -1,6 +1,4 @@
 #include "argument.hpp"
-#include "argument.hpp"
-#include <iostream>
 
 namespace args_parse {
 	Argument::Argument(char shortName, const char* longName) {
@@ -18,21 +16,19 @@ namespace args_parse {
 		_isDefined = false;
 	}
 
-	Argument::~Argument() {}
-
 	std::string Argument::GetLongName() const { return _longName; }
 
-	std::string Argument::SetLongName(const char* longName) const { _longName = longName; }
+	void Argument::SetLongName(const char* longName) { _longName = longName; }
 
-	std::string Argument::GetShortName() const { return _shortName; }
+	char Argument::GetShortName() const { return _shortName; }
 
-	std::string Argument::SetShortName(const char shortName) const { _shortName = shortName; }
+	void Argument::SetShortName(const char shortName) { _shortName = shortName; }
 
 	std::string Argument::GetDescription() const { return _description; };
 
-	std::string Argument::SetDescription(const std::string& description) const { _description = description; }
+	void Argument::SetDescription(const std::string& description) { _description = description; }
 
-	bool Argument::Matches(const std::string& arg) const {
+	bool Argument::Matches(const std::string& arg) const{
 		return arg == _shortName || arg == _longName;
 	}
 

@@ -1,3 +1,4 @@
+#pragma once
 #include "argument.hpp"
 #include <iostream>
 
@@ -6,10 +7,10 @@ namespace args_parse {
 	public:
 		/// @brief Конструктор производного класса.
 		/// Конструктор для случая, когда есть как короткое, так и длинное имя
-		IntArg(char shortName, const char* longName, int value) : Argument(shortName, longName) {}
+		IntArg(char shortName, const char* longName, int value);
 
 		/// Конструктор для случая, когда нет короткого имени
-		IntArg(const char* longName, int value) : Argument(longName) {}
+		IntArg(const char* longName, int value);
 
 		///наследование конструктора базового класса
 		using Argument::Argument;

@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 
 namespace args_parse {
@@ -25,19 +26,19 @@ namespace args_parse {
 			std::string GetLongName() const;
 
 			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-			std::string SetLongName(const char* longName) const;
+			void SetLongName(const char* longName);
 
 			/// @brief get() для получения значения поля, соответстующего в классе
-			std::string GetShortName() const;
+			char GetShortName() const;
 
 			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-			std::string SetShortName(const char shortName) const;
+			void SetShortName(const char shortName);
 
 			/// @brief get() для получения значения поля, соответстующего в классе
 			std::string GetDescription() const;
 
 			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-			std::string SetDescription(const std::string& description) const;
+			void SetDescription(const std::string& description);
 
 		protected:
 			///Короткое описание аргумента

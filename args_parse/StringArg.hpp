@@ -10,10 +10,10 @@ namespace args_parse {
 
 		/// @brief  онструктор производного класса.
 		///  онструктор дл€ случа€, когда есть как короткое, так и длинное им€
-		StringArg(char shortName, const char* longName, std::string value) : Argument(shortName, longName) {}
+		StringArg(char shortName, const char* longName, std::string value);
 
 		///  онструктор дл€ случа€, когда нет короткого имени
-		StringArg(const char* longName, std::string value) : Argument(longName) {}
+		StringArg(const char* longName, std::string value);
 
 		/// ѕроверка соответстви€ переданного аргумента имени
 		bool Matches(const std::string& arg);

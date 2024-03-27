@@ -1,8 +1,8 @@
-#include "argument.hpp"
-#include <iostream>
 #include "ArgsParser.hpp"
+#include <iostream>
 
 namespace args_parse{
+
 	ArgsParser::ArgsParser(int argc, const char** argv) {
 		_argc = argc;
 		_argv = argv;
@@ -32,7 +32,7 @@ namespace args_parse{
 	void ArgsParser::ShowHelp() {
 		std::cout << "Поддерживаемые команды:" << std::endl;
 		for (const auto& arg : _args) {
-			if (arg.GetShortName()[0]==0)
+			if (arg.GetShortName()[0] == 0)
 				std::cout << " -" << arg.GetShortName() << " ";
 			std::cout << " --" << arg.GetLongName() << "\t" << arg.GetDescription() << std::endl;
 		}
