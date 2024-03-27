@@ -1,18 +1,13 @@
 #include "IntArg.hpp"
 
 namespace args_parse {
-	IntArg::IntArg(char shortName, const char* longName) : Argument(shortName, longName) {
-		_shortName = shortName;
-		_longName = longName;
-		_isDefined = false;
-		_value = 0;
+
+	IntArg::IntArg(char shortName, const char* longName, int value) : Argument(shortName, longName) {
+		_value = value;
 	}
 
-	IntArg::IntArg(const char* longName) : Argument(longName) {
-		_shortName = '\O';
-		_longName = longName;
-		_isDefined = false;
-		_value = 0;
+	IntArg::IntArg(const char* longName, int value) : Argument(longName) {
+		_value = value;
 	}
 
 	bool IntArg::Matches(const std::string& arg) {
@@ -23,11 +18,7 @@ namespace args_parse {
 		return false;
 	}
 
-	bool IntArg::IsDefined() const {
-		return _isDefined;
-	}
-
 	int IntArg::getValue() const { return _value; }
 
-
+	void IntArg::setValue(int value) { _value = value; }
 }

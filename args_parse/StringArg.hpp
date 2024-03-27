@@ -5,25 +5,26 @@
 namespace args_parse {
 	class StringArg : public Argument {
 	public:
+		///наследование конструктора базового класса
+		using Argument::Argument;
+
 		/// @brief  онструктор производного класса.
 		///  онструктор дл€ случа€, когда есть как короткое, так и длинное им€
-		StringArg(char shortName, const char* longName) : Argument(shortName, longName) {}
+		StringArg(char shortName, const char* longName, std::string value) : Argument(shortName, longName) {}
 
 		///  онструктор дл€ случа€, когда нет короткого имени
-		StringArg(const char* longName) : Argument(longName) {}
-
-		/// ѕроверка был ли определен аргумент
-		bool IsDefined() const;
+		StringArg(const char* longName, std::string value) : Argument(longName) {}
 
 		/// ѕроверка соответстви€ переданного аргумента имени
 		bool Matches(const std::string& arg);
 
+		///ѕолучение строкового значени€ аргумента
+		std::string getValue() const;
+
+		///ѕрисваивание строкового значени€ аргументу
+		void setValue(std::string value);
+
 	private:
-		///‘лаг дл€ проверки определен ли аргумент
-		bool _isDefined;
-		/// ороткое описание аргумента
-		char _shortName;
-		///ƒлинное описание аргумента
-		std::string _longName;
+		std::string _value;
 	};
 }

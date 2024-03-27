@@ -7,6 +7,7 @@ namespace args_parse {
 		_shortName = shortName;
 		_longName = longName;
 		_description = "";
+		_isDefined = false;
 	}
 
 	Argument::Argument(const char* longName)
@@ -14,6 +15,7 @@ namespace args_parse {
 		_shortName = '\O';
 		_longName = longName;
 		_description = "";
+		_isDefined = false;
 	}
 
 	Argument::~Argument() {}
@@ -32,5 +34,9 @@ namespace args_parse {
 
 	bool Argument::Matches(const std::string& arg) const {
 		return arg == _shortName || arg == _longName;
+	}
+
+	bool Argument::IsDefined() const {
+		return _isDefined;
 	}
 }

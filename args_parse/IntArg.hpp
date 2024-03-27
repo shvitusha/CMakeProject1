@@ -6,27 +6,24 @@ namespace args_parse {
 	public:
 		/// @brief  онструктор производного класса.
 		///  онструктор дл€ случа€, когда есть как короткое, так и длинное им€
-		IntArg(char shortName, const char* longName) : Argument(shortName, longName) {}
+		IntArg(char shortName, const char* longName, int value) : Argument(shortName, longName) {}
 
 		///  онструктор дл€ случа€, когда нет короткого имени
-		IntArg(const char* longName) : Argument(longName) {}
+		IntArg(const char* longName, int value) : Argument(longName) {}
 
-		/// ѕроверка был ли определен аргумент
-		bool IsDefined() const;
+		///наследование конструктора базового класса
+		using Argument::Argument;
 
 		/// ѕроверка соответстви€ переданного аргумента имени
 		bool Matches(const std::string& arg);
 
-		///ѕолучение числового значени€ пол€
+		///ѕолучение числового значени€ аргумента
 		int getValue() const;
 
+		///ѕрисваивание числового значени€ аргументу
+		void setValue(int value);
+
 	private:
-		///‘лаг дл€ проверки определен ли аргумент
-		bool _isDefined;
-		/// ороткое описание аргумента
-		char _shortName;
-		///ƒлинное описание аргумента
-		std::string _longName;
 		///«начение аргумента
 		int _value;
 	};

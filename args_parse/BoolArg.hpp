@@ -5,25 +5,19 @@
 namespace args_parse {
 	class BoolArg : public Argument {
 	public:
-		/// @brief  онструктор производного класса.
-		///  онструктор дл€ случа€, когда есть как короткое, так и длинное им€
-		BoolArg(char shortName, const char* longName) : Argument(shortName, longName) {}
-
-		///  онструктор дл€ случа€, когда нет короткого имени
-		BoolArg(const char* longName) : Argument(longName) {}
-
-		/// ѕроверка был ли определен аргумент
-		bool IsDefined() const;
+		///наследование конструктора базового класса
+		using Argument::Argument;
 
 		/// ѕроверка соответстви€ переданного аргумента имени
 		bool Matches(const std::string& arg);
 
+		///ѕолучение булевого значени€ аргумента
+		bool getValue() const;
+
+		///ѕрисваивание булевого значени€ аргументу
+		void setValue(bool value);
+
 	private:
-		///‘лаг дл€ проверки определен ли аргумент
-		bool _isDefined;
-		/// ороткое описание аргумента
-		char _shortName;
-		///ƒлинное описание аргумента
-		std::string _longName;
+		bool _value;
 	};
 }

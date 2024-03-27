@@ -2,46 +2,51 @@
 
 namespace args_parse {
 	class Argument {
-	public:
-		/// @brief Конструктор класса
-		/// Конструктор для случая, когда есть как короткое, так и длинное имя
-		Argument(char shortName, const char* longName);
+		public:
+			/// @brief Конструктор класса
+			/// Конструктор для случая, когда есть как короткое, так и длинное имя
+			Argument(char shortName, const char* longName);
 
-		/// Конструктор для случая, когда нет короткого имени
-		Argument(const char* longName);
+			/// Конструктор для случая, когда нет короткого имени
+			Argument(const char* longName);
 
-		/// @brief Деструктор
-		virtual ~Argument() {}
+			/// @brief Деструктор
+			virtual ~Argument() {}
 
-		/// @brief Функция для проверки соответствия аргумента командной строки. 
-		/// Аргумент передается в качестве параметра.
-		/// Возвращает булевое значение
-		virtual bool Matches(const std::string& arg) const;
+			/// @brief Функция для проверки соответствия аргумента командной строки. 
+			/// Аргумент передается в качестве параметра.
+			/// Возвращает булевое значение
+			virtual bool Matches(const std::string& arg) const;
 
-		/// @brief get() для получения значения поля, соответстующего в классе
-		std::string GetLongName() const;
+			/// Проверка был ли определен аргумент
+			bool IsDefined() const;
 
-		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-		std::string SetLongName(const char* longName) const;
+			/// @brief get() для получения значения поля, соответстующего в классе
+			std::string GetLongName() const;
 
-		/// @brief get() для получения значения поля, соответстующего в классе
-		std::string GetShortName() const;
+			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
+			std::string SetLongName(const char* longName) const;
 
-		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-		std::string SetShortName(const char shortName) const;
+			/// @brief get() для получения значения поля, соответстующего в классе
+			std::string GetShortName() const;
 
-		/// @brief get() для получения значения поля, соответстующего в классе
-		std::string GetDescription() const;
+			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
+			std::string SetShortName(const char shortName) const;
 
-		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-		std::string SetDescription(const std::string& description) const;
+			/// @brief get() для получения значения поля, соответстующего в классе
+			std::string GetDescription() const;
 
-	protected:
-		///Короткое описание аргумента
-		char _shortName;
-		///Длинное описание аргумента
-		std::string _longName;
-		///Дополнительное описание аргумента
-		std::string _description;
+			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
+			std::string SetDescription(const std::string& description) const;
+
+		protected:
+			///Короткое описание аргумента
+			char _shortName;
+			///Длинное описание аргумента
+			std::string _longName;
+			///Дополнительное описание аргумента
+			std::string _description;
+			///Флаг для проверки определен ли аргумент
+			bool _isDefined;
 	};
 }

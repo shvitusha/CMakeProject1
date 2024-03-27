@@ -1,16 +1,13 @@
 #include "StringArg.hpp"
 
 namespace args_parse {
-	StringArg::StringArg(char shortName, const char* longName) : Argument(shortName, longName) {
-		_shortName = shortName;
-		_longName = longName;
-		_isDefined = false;
+
+	StringArg::StringArg(char shortName, const char* longName, std::string value) : Argument(shortName, longName) {
+		_value = value;
 	}
 
-	StringArg::StringArg(const char* longName) : Argument(longName) {
-		_shortName = '\O';
-		_longName = longName;
-		_isDefined = false;
+	StringArg::StringArg(const char* longName, std::string value) : Argument(longName) {
+		_value = value;
 	}
 
 	bool StringArg::Matches(const std::string& arg) {
@@ -21,7 +18,7 @@ namespace args_parse {
 		return false;
 	}
 
-	bool StringArg::IsDefined() const {
-		return _isDefined;
-	}
+	std::string StringArg::getValue() const { return _value; }
+
+	void StringArg::setValue(std::string value) { _value = value; }
 }
