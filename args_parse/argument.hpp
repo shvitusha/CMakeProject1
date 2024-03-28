@@ -17,7 +17,7 @@ namespace args_parse {
 			/// @brief ‘ункци€ дл€ проверки соответстви€ аргумента командной строки. 
 			/// јргумент передаетс€ в качестве параметра.
 			/// ¬озвращает булевое значение
-			virtual bool Matches(const std::string& arg) const;
+			virtual bool Matches(const std::string& arg) { return false; }
 
 			/// @brief get() дл€ получени€ значени€ пол€, соответстующего в классе
 			std::string GetLongName() const;
@@ -37,8 +37,13 @@ namespace args_parse {
 			/// @brief ћетод set() дл€ присваивани€ значени€ полю, соответстующему в классе
 			void SetDescription(const std::string& description);
 
-			/// ѕроверка был ли определен аргумент
+			/// @brief  ѕроверка был ли определен аргумент
 			bool IsDefined() const;
+
+			/// @brief ћетод дл€ валидатора значени€ и сохранени€ его внутри объекта `Argument`
+			virtual bool ValidValue(const std::string& value) {
+				return false;
+			}
 
 		protected:
 			/// ороткое описание аргумента

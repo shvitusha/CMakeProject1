@@ -16,13 +16,15 @@ namespace args_parse {
 		StringArg(const char* longName, std::string value);
 
 		/// ѕроверка соответстви€ переданного аргумента имени
-		bool Matches(const std::string& arg);
+		bool Matches(const std::string& arg) override;
 
 		///ѕолучение строкового значени€ аргумента
 		std::string getValue();
 
 		///ѕрисваивание строкового значени€ аргументу
 		void setValue(std::string value);
+
+		bool ValidValue(const std::string& value) override;
 
 	private:
 		std::string _value;

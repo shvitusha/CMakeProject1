@@ -28,9 +28,5 @@ namespace args_parse {
 
 	void Argument::SetDescription(const std::string& description) { _description = description; }
 
-	bool Argument::Matches(const std::string& arg) const{
-		return arg == std::string(1, _shortName) || arg == _longName;
-	}
-
 	bool Argument::IsDefined() const{ return _isDefined; }
 }

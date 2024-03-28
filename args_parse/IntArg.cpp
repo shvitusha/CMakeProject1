@@ -1,4 +1,7 @@
 #include "IntArg.hpp"
+#include <string>
+
+using namespace std;
 
 namespace args_parse {
 
@@ -10,8 +13,8 @@ namespace args_parse {
 		_value = value;
 	}
 
-	bool IntArg::Matches(const std::string& arg) {
-		if (arg == std::string(1, _shortName) || arg == _longName) {
+	bool IntArg::Matches(const string& arg) {
+		if (arg == string(1, _shortName) || arg == _longName) {
 			_isDefined = true;
 			return true;
 		}
@@ -21,4 +24,16 @@ namespace args_parse {
 	int IntArg::getValue() { return _value; }
 
 	void IntArg::setValue(int value) { _value = value; }
+
+	bool IntArg::ValidValue(const string& value) {
+		try
+		{
+			_value = stoi(value);
+			return true;
+		}
+		catch (const invalid_argument&)
+		{
+			return false;
+		}
+	}
 }

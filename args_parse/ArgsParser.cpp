@@ -35,9 +35,11 @@ namespace args_parse {
 		return true;
 	}*/
 
-	void ArgsParser::ShowHelp() {
-		std::cout << "Поддерживаемые команды:" << std::endl;
-		for (const auto& arg : _args) {
+	void ArgsParser::ShowHelp()
+	{
+		std::cout << "Supported commands:" << std::endl;
+		for (const auto& arg : _args)
+		{
 			if (arg.GetShortName() == '\0')
 				std::cout << " -" << arg.GetShortName() << " ";
 			std::cout << " --" << arg.GetLongName() << "\t" << arg.GetDescription() << std::endl;
@@ -49,13 +51,15 @@ namespace args_parse {
 	{
 		size_t position = operatString.find("--");
 
-		if (position != std::string::npos && position == 0) {
+		if (position != std::string::npos && position == 0)
+		{
 			return o_type = "long";
 		}
 
 		position = operatString.find("-");
 
-		if (position != std::string::npos && position == 0) {
+		if (position != std::string::npos && position == 0)
+		{
 			return o_type = "short";
 		}
 
@@ -64,14 +68,16 @@ namespace args_parse {
 
 	Argument ArgsParser::FindLongNameArg(std::string item, std::string& value) const
 	{
-		for (auto arg : _args) {
+		for (auto arg : _args)
+		{
 			auto longArg = arg.GetLongName();
 			size_t equalSignPosition = item.find(longArg);
 
-			if (equalSignPosition != std::string::npos && equalSignPosition == 0 && longArg.length() < item.length()) {
+			if (equalSignPosition != std::string::npos && equalSignPosition == 0 && longArg.length() < item.length())
+			{
 				if (value != "")
 				{
-					throw std::invalid_argument("Передача нескольких значений");
+					throw std::invalid_argument("Transferring multiple values");
 				}
 
 				value = item.substr(longArg.length());
@@ -85,18 +91,21 @@ namespace args_parse {
 			}
 		}
 
-		throw std::invalid_argument("Не найден");
+		throw std::invalid_argument("Not found");
 	}
 
 	Argument ArgsParser::FindShortNameArg(std::string item, std::string& value) const
 	{
-		for (auto arg : _args) {
+		for (auto arg : _args)
+		{
 			size_t position = item.find(arg.GetShortName());
-			if (position == 0) {
-				if (position + 1 < item.length()) {
+			if (position == 0)
+			{
+				if (position + 1 < item.length())
+				{
 					if (value != "")
 					{
-						throw std::invalid_argument("Передача нескольких значений");
+						throw std::invalid_argument("Transferring multiple values");
 					}
 
 					value = item.substr(position + 1);
@@ -106,78 +115,57 @@ namespace args_parse {
 			}
 		}
 
-		throw std::invalid_argument("Передача нескольких значений");
+		throw std::invalid_argument("Transferring multiple values");
 	}
 
 	bool ArgsParser::Parse()
 	{
-		std::vector<Argument, std::string> vector;
+		for (int i = 1; i < _argc; ++i) {
+			std::string argStr(_argv[i]);
+			o_type = IsOperator(argStr);
+			std::string argName;
+			std::string argValue;
 
-		for (int i = 1; i < _argc; ++i)
-		{
-			auto item = _argv[i];
-			std::string strItem(item);
-			std::string operatorType = IsOperator(strItem);
-
-			std::string value = "";
-			size_t equalSignPosition = strItem.find('=');
-
-			if (equalSignPosition != std::string::npos) {
-				value = strItem.substr(equalSignPosition + 1);
-				item = strItem.substr(0, equalSignPosition).c_str();
+			if (o_type == "long") {
+				argName = argStr.substr(2);
 			}
-
-			if (operatorType == "long")
+			else if (o_type == "short") {
+				argName = argStr.substr(2);
+				if (argStr.length() > 2 && argStr.substr(2, 1) == "=") {
+					argValue = argStr.substr(3);
+				}
+				else if(argStr.length() > 2)
+				{
+					argValue = argStr.substr(2);
+				}
+			}
+			else
 			{
-				item = strItem.erase(0, 2).c_str();
-				Argument arg = FindLongNameArg(item, value);
-
+				std::string errorMessage = "Invalid argument format: " + argStr;
+				throw std::invalid_argument(errorMessage);
 			}
 
-			if (operatorType == "short")
+			try
 			{
-				strItem.erase(0, 1);
-				Argument arg = FindShortNameArg(item, value);
-
+				if (o_type == "long") {
+					Argument arg = FindLongNameArg(argName, argValue);
+					if (!arg.ValidValue(argValue)) {
+						std::cerr << "" << argStr << std::endl;
+					}
+				}
+				else if (o_type == "short") {
+					Argument arg = FindShortNameArg(argName, argValue);
+					if (!arg.ValidValue(argValue)) {
+						std::cerr << "" << argStr << std::endl;
+					}
+				}
 			}
-
-			auto nextElement = _argv[i + 1];
-			if (value != ""){
-				throw std::invalid_argument("Передача нескольких значений");
-			}
-			value = nextElement;
-			i++;
-
-			if (value == ""){
-				throw std::invalid_argument("Оператор должен иметь значение");
+			catch (const std::invalid_argument& e)
+			{
+				std::string errorMessage = e.what();
+				throw std::invalid_argument(errorMessage);
 			}
 		}
 		return true;
-		//try {
-		//	for (int i = 1; i < _argc; ++i) {
-		//		std::string item(_argv[i]);
-		//		// Определяем тип оператора (длинный или короткий)
-		//		std::string operatorType = IsOperator(item);
-		//		// Получаем оператор и его значение (если есть)
-		//		std::string value;
-		//		if (operatorType == "long") {
-		//			auto foundOperator = FindLongNameArg(item, value);
-		//		}
-		//		else if (operatorType == "short") {
-		//			auto foundOperator = FindShortNameArg(item, value);
-		//		}
-		//		else {
-		//			throw std::invalid_argument("Invalid operator");
-		//		}
-		//		// Обрабатываем значение (если оно есть)
-		//		// ...
-		//		// Далее можно выполнить дополнительные действия с найденным оператором и его значением
-		//	}
-		//	return true;
-		//}
-		//catch (const std::exception& e) {
-		//	std::cerr << "Error during parsing: " << e.what() << std::endl;
-		//	return false;
-		//}
 	}
 }

@@ -9,13 +9,15 @@ namespace args_parse {
 		using Argument::Argument;
 
 		/// ѕроверка соответстви€ переданного аргумента имени
-		bool Matches(const std::string& arg);
+		bool Matches(const std::string& arg) override;
 
 		///ѕолучение булевого значени€ аргумента
 		bool getValue();
 
 		///ѕрисваивание булевого значени€ аргументу
 		void setValue(bool value);
+
+		bool ValidValue(const std::string& value) override;
 
 	private:
 		bool _value;

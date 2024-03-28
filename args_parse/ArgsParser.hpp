@@ -23,10 +23,14 @@ namespace args_parse {
 		/// Выводит описание всех добавленных аргументов командной строки
 		void ShowHelp();
 
+		/// @brief Метод для поиска длинного имени, если оно есть
 		Argument FindLongNameArg(std::string item, std::string& value) const;
 
+		/// @brief Метод поиска короткого имени, если оно есть
 		Argument FindShortNameArg(std::string item, std::string& value) const;
 
+		/// @brief Метод, который проверяет является ли строка оператором.
+		/// Возвращает какой оператор был использован, в качестве строки
 		std::string IsOperator(std::string operatString);
 
 	private:

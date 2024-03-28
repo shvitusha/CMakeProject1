@@ -21,4 +21,9 @@ namespace args_parse {
 	std::string StringArg::getValue() { return _value; }
 
 	void StringArg::setValue(std::string value) { _value = value; }
+
+	bool StringArg::ValidValue(const std::string& value) {
+		_value = value;
+		return true;
+	}
 }
