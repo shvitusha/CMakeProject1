@@ -10,7 +10,7 @@ namespace args_parse {
 		return false;
 	}
 
-	bool BoolArg::getValue(){ return _value; }
+	/*bool BoolArg::getValue(){ return _value; }
 
 	void BoolArg::setValue(bool value){ _value = value; }
 
@@ -24,5 +24,5 @@ namespace args_parse {
 			return true;
 		}
 		return false;
-	}
+	}*/
 }

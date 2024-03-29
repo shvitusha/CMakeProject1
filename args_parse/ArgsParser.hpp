@@ -30,8 +30,8 @@ namespace args_parse {
 		Argument FindShortNameArg(std::string item, std::string& value) const;
 
 		/// @brief ћетод, который провер€ет €вл€етс€ ли строка оператором.
-		/// ¬озвращает какой оператор был использован, в качестве строки
-		std::string IsOperator(std::string operatString);
+		/// ¬озвращает какой оператор был использован
+		OperatorType IsOperator(std::string operatString);
 
 	private:
 		/// —колько всего аргументов.
@@ -40,5 +40,12 @@ namespace args_parse {
 		const char** _argv;
 		/// ћассив дл€ хранени€ объектов аргументов командной строки
 		std::vector<Argument> _args;
+	};
+
+	/// @brief ѕеречисление типов оператора (длинный, короткий, неопределенный)
+	enum class OperatorType {
+		Long,
+		Short,
+		Nope
 	};
 }
