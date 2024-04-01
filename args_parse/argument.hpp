@@ -11,6 +11,8 @@ namespace args_parse {
 			/// Конструктор для случая, когда нет короткого имени
 			Argument(const char* longName);
 
+			Argument();
+
 			/// @brief Деструктор
 			virtual ~Argument() {}
 
@@ -37,8 +39,8 @@ namespace args_parse {
 			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
 			void SetDescription(const std::string& description);
 
-			/// @brief  Проверка был ли определен аргумент
-			bool IsDefined() const;
+			/// @brief  Проверка может ли быть у аргумента значение
+			virtual bool HasValue() const { return false; }
 
 			/// @brief Метод для валидатора значения и сохранения его внутри объекта `Argument`
 			virtual bool ValidValue(const std::string& value) {
@@ -52,7 +54,5 @@ namespace args_parse {
 			std::string _longName;
 			///Дополнительное описание аргумента
 			std::string _description;
-			///Флаг для проверки определен ли аргумент
-			bool _isDefined;
 	};
 }

@@ -12,7 +12,7 @@ namespace args_parse {
 
 	bool StringArg::Matches(const std::string& arg) {
 		if (arg == std::string(1, _shortName) || arg == _longName) {
-			_isDefined = true;
+			//_isDefined = true;
 			return true;
 		}
 		return false;
@@ -24,6 +24,10 @@ namespace args_parse {
 
 	bool StringArg::ValidValue(const std::string& value) {
 		_value = value;
+		return true;
+	}
+
+	bool StringArg::HasValue() const {
 		return true;
 	}
 }

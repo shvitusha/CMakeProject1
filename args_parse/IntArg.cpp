@@ -15,7 +15,7 @@ namespace args_parse {
 
 	bool IntArg::Matches(const string& arg) {
 		if (arg == string(1, _shortName) || arg == _longName) {
-			_isDefined = true;
+			//_isDefined = true;
 			return true;
 		}
 		return false;
@@ -35,5 +35,9 @@ namespace args_parse {
 		{
 			return false;
 		}
+	}
+
+	bool IntArg::HasValue() const {
+		return true;
 	}
 }

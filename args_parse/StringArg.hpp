@@ -26,6 +26,8 @@ namespace args_parse {
 
 		bool ValidValue(const std::string& value) override;
 
+		bool HasValue() const override;
+
 	private:
 		std::string _value;
 	};

@@ -3,6 +3,14 @@
 #include <vector>
 
 namespace args_parse {
+
+	/// @brief ѕеречисление типов оператора (длинный, короткий, неопределенный)
+	enum class OperatorType {
+		Long,
+		Short,
+		Nope
+	};
+
 	class ArgsParser {
 	public:
 		/// @brief  онструктор класса.
@@ -16,6 +24,14 @@ namespace args_parse {
 		/// ќн проходит по каждому аргументу командной строки и провер€ет, был ли найден аргумент в векторе
 		bool Parse();
 
+		void ParseLongArgument(const std::string& argStr, std::string& argName, std::string& argValue);
+
+		void ParseShortArgument(const std::string& argStr, std::string& argName, std::string& argValue);
+
+		void ProcessArgument(const std::string& argStr, const std::string& argName, std::string& argValue, int& i) const;
+
+		std::unique_ptr<Argument> FindArgument(const std::string& argName, std::string& argValue) const;
+
 		/// @brief ƒеструктор
 		~ArgsParser();
 
@@ -24,10 +40,10 @@ namespace args_parse {
 		void ShowHelp();
 
 		/// @brief ћетод дл€ поиска длинного имени, если оно есть
-		Argument FindLongNameArg(std::string item, std::string& value) const;
+		std::unique_ptr<Argument> FindLongNameArg(std::string item, std::string& value) const;
 
 		/// @brief ћетод поиска короткого имени, если оно есть
-		Argument FindShortNameArg(std::string item, std::string& value) const;
+		std::unique_ptr<Argument> FindShortNameArg(std::string item, std::string& value) const;
 
 		/// @brief ћетод, который провер€ет €вл€етс€ ли строка оператором.
 		/// ¬озвращает какой оператор был использован
@@ -40,12 +56,5 @@ namespace args_parse {
 		const char** _argv;
 		/// ћассив дл€ хранени€ объектов аргументов командной строки
 		std::vector<Argument> _args;
-	};
-
-	/// @brief ѕеречисление типов оператора (длинный, короткий, неопределенный)
-	enum class OperatorType {
-		Long,
-		Short,
-		Nope
 	};
 }

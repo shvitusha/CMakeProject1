@@ -27,7 +27,7 @@ int main(int argc, const char** argv)
     parser.ShowHelp();
 
     if (parser.Parse()) {
-        if (help.IsDefined()) {
+        if (help.HasValue()) {
             parser.ShowHelp();
             return 0;
         }

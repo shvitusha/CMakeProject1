@@ -69,7 +69,7 @@ namespace args_parse {
 		return OperatorType::Nope;
 	}
 
-	Argument ArgsParser::FindLongNameArg(std::string item, std::string& value) const
+	std::unique_ptr<Argument> ArgsParser::FindLongNameArg(std::string item, std::string& value) const
 	{
 		for (const auto &arg : _args)
 		{
@@ -84,20 +84,21 @@ namespace args_parse {
 				}
 
 				value = item.substr(longArg.length());
-
-				return arg;
+				return std::make_unique<Argument>(arg);
 			}
 
-			if (longArg == item)
+			/*if (longArg == item)
 			{
 				return arg;
-			}
+			}*/
+			if (item.compare(0, longArg.length(), longArg) == 0)
+				return std::make_unique<Argument>(arg);
 		}
 
 		throw std::invalid_argument("Not found");
 	}
 
-	Argument ArgsParser::FindShortNameArg(std::string item, std::string& value) const
+	std::unique_ptr<Argument> ArgsParser::FindShortNameArg(std::string item, std::string& value) const
 	{
 		for (const auto &arg : _args)
 		{
@@ -113,8 +114,7 @@ namespace args_parse {
 
 					value = item.substr(position + LenghtOneChar);
 				}
-
-				return arg;
+				return std::make_unique<Argument>(arg);
 			}
 		}
 
@@ -129,7 +129,7 @@ namespace args_parse {
 			std::string argName;
 			std::string argValue;
 
-			if (o_type == OperatorType::Long) {
+			/*if (o_type == OperatorType::Long) {
 				size_t equalPosition = argStr.find('=');
 				size_t spacePosition = argStr.find(' ');
 
@@ -191,8 +191,97 @@ namespace args_parse {
 			{
 				std::string errorMessage = e.what();
 				throw std::invalid_argument(errorMessage);
+			}*/
+
+			if (argStr.substr(0, 2) == "--")
+			{
+				ParseLongArgument(argStr, argName, argValue);
 			}
+			else if (argStr[0] == '-')
+			{
+				ParseShortArgument(argStr, argName, argValue);
+			}
+			else {
+				std::string errorMessage = "Invalid argument format: " + argStr;
+				throw std::invalid_argument(errorMessage);
+			}
+
+			ProcessArgument(argStr, argName, argValue, i);
+			std::cout << "\nString: " << argStr << " ; Name: " << argName << " ;" << std::endl;
+			if (!argValue.empty())
+				std::cout << "Value: " << argValue << std::endl;
 		}
 		return true;
+	}
+
+	void ArgsParser::ParseLongArgument(const std::string& argStr, std::string& argName, std::string& argValue)
+	{
+		argName = argStr.substr(2);
+		size_t equalPosition = argName.find('=');
+		if (equalPosition != std::string::npos)
+		{
+			argValue = argName.substr(equalPosition + 1);
+			argName = argName.substr(0, equalPosition);
+		}
+	}
+
+	void ArgsParser::ParseShortArgument(const std::string& argStr, std::string& argName, std::string& argValue)
+	{
+		argName = argStr.substr(1, 1);
+		if (argStr.length() > 2 && (argStr[2] == '=' || argStr[2] == ' '))
+		{
+			argValue = argStr.substr(3);
+		}
+		else if (argStr.length() > 2)
+		{
+			argValue = argStr.substr(2);
+		}
+	}
+
+	void ArgsParser::ProcessArgument(const std::string& argStr, const std::string& argName, std::string& argValue, int& i) const
+	{
+		try {
+			std::unique_ptr<Argument> arg = FindArgument(argName, argValue);
+
+			if (arg != nullptr) {
+				if (arg->HasValue()) {
+					if (argValue.empty()) {
+						if (i + 1 < _argc) {
+							argValue = _argv[i + 1];
+							++i;
+						}
+						else {
+							std::string errorMessage = "Missing value for argument: " + argName;
+							throw std::invalid_argument(errorMessage);
+						}
+					}
+					if (!arg->ValidValue(argValue)) {
+						std::cerr << "Invalid value for argument: " << argStr << std::endl;
+					}
+				}
+			}
+			else {
+				std::cerr << "Unknown argument: " << argStr << std::endl;
+			}
+		}
+		catch (const std::invalid_argument& e) {
+			std::string errorMessage = e.what();
+			throw std::invalid_argument(errorMessage);
+		}
+	}
+
+	std::unique_ptr<Argument> ArgsParser::FindArgument(const std::string& argName, std::string& argValue) const
+	{
+		std::unique_ptr<Argument> arg = nullptr;
+		if (o_type == OperatorType::Long) {
+			arg = FindLongNameArg(argName, argValue);
+			return arg;
+		}
+		else if (o_type == OperatorType::Short) {
+			arg = FindShortNameArg(argName, argValue);
+			return arg;
+		}
+
+		return nullptr;
 	}
 }

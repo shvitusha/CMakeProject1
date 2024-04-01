@@ -25,6 +25,8 @@ namespace args_parse {
 		void setValue(int value);
 
 		bool ValidValue(const std::string& value) override;
+		
+		bool HasValue() const override;
 
 	private:
 		///Значение аргумента
