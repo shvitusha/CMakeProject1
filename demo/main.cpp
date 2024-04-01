@@ -34,9 +34,6 @@ int main(int argc, const char** argv)
         if (!output.getValue().empty()) {
             std::cout << "Output value: " << output.getValue() << std::endl;
         }
-        if (number.getValue() != 0) {
-            std::cout << "Input value: " << number.getValue() << std::endl;
-        }
     }
     return 0;
 }

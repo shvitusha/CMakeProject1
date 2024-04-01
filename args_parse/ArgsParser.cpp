@@ -218,10 +218,21 @@ namespace args_parse {
 	{
 		argName = argStr.substr(2);
 		size_t equalPosition = argName.find('=');
+		size_t spacePosition = argName.find(' ');
 		if (equalPosition != std::string::npos)
 		{
 			argValue = argName.substr(equalPosition + 1);
 			argName = argName.substr(0, equalPosition);
+		}
+		else if (spacePosition != std::string::npos)
+		{
+			argValue = argName.substr(spacePosition + 1);
+			argName = argName.substr(0, spacePosition);
+		}
+		else if (argStr.length() > 3)
+		{
+			argValue = argStr.substr(argName.length() + LenghtTwoChar);
+
 		}
 	}
 
