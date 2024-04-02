@@ -10,10 +10,10 @@ namespace args_parse {
 
 		/// @brief  онструктор производного класса.
 		///  онструктор дл€ случа€, когда есть как короткое, так и длинное им€
-		StringArg(char shortName, const char* longName, std::string value);
+		StringArg(char shortName, const char* longName);
 
 		///  онструктор дл€ случа€, когда нет короткого имени
-		StringArg(const char* longName, std::string value);
+		StringArg(const char* longName);
 
 		/// ѕроверка соответстви€ переданного аргумента имени
 		bool Matches(const std::string& arg) override;
@@ -24,9 +24,9 @@ namespace args_parse {
 		///ѕрисваивание строкового значени€ аргументу
 		void setValue(std::string value);
 
-		bool ValidValue(const std::string& value) override;
+		//bool ValidValue(const std::string& value) override;
 
-		bool HasValue() const override;
+		const Validator* GetValidator() const override;
 
 	private:
 		std::string _value;

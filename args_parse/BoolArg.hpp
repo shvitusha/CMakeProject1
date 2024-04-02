@@ -8,18 +8,26 @@ namespace args_parse {
 		///наследование конструктора базового класса
 		using Argument::Argument;
 
+		/// @brief  онструктор производного класса.
+		///  онструктор дл€ случа€, когда есть как короткое, так и длинное им€
+		BoolArg(char shortName, const char* longName);
+
+		///  онструктор дл€ случа€, когда нет короткого имени
+		BoolArg(const char* longName);
+
 		/// ѕроверка соответстви€ переданного аргумента имени
 		bool Matches(const std::string& arg) override;
 
-	//	///ѕолучение булевого значени€ аргумента
-	//	bool getValue();
+		const Validator* GetValidator() const override;
+		//	///ѕолучение булевого значени€ аргумента
+		//	bool getValue();
 
-	//	///ѕрисваивание булевого значени€ аргументу
-	//	void setValue(bool value);
+		//	///ѕрисваивание булевого значени€ аргументу
+		//	void setValue(bool value);
 
-	//	bool ValidValue(const std::string& value) override;
+		//	bool ValidValue(const std::string& value) override;
 
-	//private:
-	//	bool _value;
+		//private:
+		//	bool _value;
 	};
 }

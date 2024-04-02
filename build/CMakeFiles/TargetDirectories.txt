@@ -1,0 +1,16 @@
+D:/Github repositories/CMakeProject1/build/CMakeFiles/Experimental.dir
+D:/Github repositories/CMakeProject1/build/CMakeFiles/Nightly.dir
+D:/Github repositories/CMakeProject1/build/CMakeFiles/Continuous.dir
+D:/Github repositories/CMakeProject1/build/CMakeFiles/NightlyMemoryCheck.dir
+D:/Github repositories/CMakeProject1/build/CMakeFiles/RUN_TESTS.dir
+D:/Github repositories/CMakeProject1/build/CMakeFiles/ALL_BUILD.dir
+D:/Github repositories/CMakeProject1/build/CMakeFiles/ZERO_CHECK.dir
+D:/Github repositories/CMakeProject1/build/args_parse/CMakeFiles/args_parse.dir
+D:/Github repositories/CMakeProject1/build/args_parse/CMakeFiles/RUN_TESTS.dir
+D:/Github repositories/CMakeProject1/build/args_parse/CMakeFiles/ALL_BUILD.dir
+D:/Github repositories/CMakeProject1/build/demo/CMakeFiles/args_parse_demo.dir
+D:/Github repositories/CMakeProject1/build/demo/CMakeFiles/RUN_TESTS.dir
+D:/Github repositories/CMakeProject1/build/demo/CMakeFiles/ALL_BUILD.dir
+D:/Github repositories/CMakeProject1/build/test/CMakeFiles/_unit_test_args_parse.dir
+D:/Github repositories/CMakeProject1/build/test/CMakeFiles/RUN_TESTS.dir
+D:/Github repositories/CMakeProject1/build/test/CMakeFiles/ALL_BUILD.dir

@@ -1,58 +1,64 @@
 #pragma once
+#include "Validator.hpp"
 #include <iostream>
 
 namespace args_parse {
 	class Argument {
-		public:
-			/// @brief Конструктор класса
-			/// Конструктор для случая, когда есть как короткое, так и длинное имя
-			Argument(char shortName, const char* longName);
+	public:
+		/// @brief Конструктор класса
+		/// Конструктор для случая, когда есть как короткое, так и длинное имя
+		Argument(char shortName, const char* longName, bool isValue);
 
-			/// Конструктор для случая, когда нет короткого имени
-			Argument(const char* longName);
+		/// Конструктор для случая, когда нет короткого имени
+		Argument(const char* longName, bool isValue);
 
-			Argument();
+		/// Конструктор по умолчанию
+		Argument();
 
-			/// @brief Деструктор
-			virtual ~Argument() {}
+		/// @brief Деструктор
+		virtual ~Argument() {}
 
-			/// @brief Функция для проверки соответствия аргумента командной строки. 
-			/// Аргумент передается в качестве параметра.
-			/// Возвращает булевое значение
-			virtual bool Matches(const std::string& arg) { return false; }
+		/// @brief Функция для проверки соответствия аргумента командной строки.
+		/// Аргумент передается в качестве параметра.
+		/// Возвращает булевое значение
+		virtual bool Matches(const std::string& arg) { return false; }
 
-			/// @brief get() для получения значения поля, соответстующего в классе
-			std::string GetLongName() const;
+		/// @brief get() для получения значения поля, соответстующего в классе
+		std::string GetLongName() const;
 
-			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-			void SetLongName(const char* longName);
+		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
+		void SetLongName(const char* longName);
 
-			/// @brief get() для получения значения поля, соответстующего в классе
-			char GetShortName() const;
+		/// @brief get() для получения значения поля, соответстующего в классе
+		char GetShortName() const;
 
-			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-			void SetShortName(const char shortName);
+		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
+		void SetShortName(const char shortName);
 
-			/// @brief get() для получения значения поля, соответстующего в классе
-			std::string GetDescription() const;
+		/// @brief get() для получения значения поля, соответстующего в классе
+		std::string GetDescription() const;
 
-			/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-			void SetDescription(const std::string& description);
+		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
+		void SetDescription(const std::string& description);
 
-			/// @brief  Проверка может ли быть у аргумента значение
-			virtual bool HasValue() const { return false; }
+		/// @brief  Проверка может ли быть у аргумента значение
+		bool HasValue() const { return _isValue; }
 
-			/// @brief Метод для валидатора значения и сохранения его внутри объекта `Argument`
-			virtual bool ValidValue(const std::string& value) {
-				return false;
-			}
+		/*/// @brief Метод для валидатора значения и сохранения его внутри объекта `Argument`
+		virtual bool ValidValue(const std::string& value) {
+			return false;
+		}*/
 
-		protected:
-			///Короткое описание аргумента
-			char _shortName;
-			///Длинное описание аргумента
-			std::string _longName;
-			///Дополнительное описание аргумента
-			std::string _description;
+		virtual const Validator* GetValidator() const;
+
+	protected:
+		///Короткое описание аргумента
+		char _shortName;
+		///Длинное описание аргумента
+		std::string _longName;
+		///Дополнительное описание аргумента
+		std::string _description;
+		///Флаг на наличие параметра
+		bool _isValue;
 	};
 }

@@ -3,7 +3,6 @@
 #include <vector>
 
 namespace args_parse {
-
 	/// @brief Перечисление типов оператора (длинный, короткий, неопределенный)
 	enum class OperatorType {
 		Long,

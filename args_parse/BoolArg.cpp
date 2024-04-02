@@ -1,6 +1,9 @@
 #include "BoolArg.hpp"
 
 namespace args_parse {
+	BoolArg::BoolArg(char shortName, const char* longName) : Argument(shortName, longName, false) {}
+
+	BoolArg::BoolArg(const char* longName) : Argument(longName, false) {}
 
 	bool BoolArg::Matches(const std::string& arg) {
 		if (arg == std::string(1, _shortName) || arg == _longName) {
@@ -25,4 +28,7 @@ namespace args_parse {
 		}
 		return false;
 	}*/
+	const Validator* BoolArg::GetValidator() const {
+		return Argument::GetValidator();
+	}
 }
