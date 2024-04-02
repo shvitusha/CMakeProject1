@@ -17,7 +17,7 @@ namespace args_parse {
 		ArgsParser(int argc, const char** argv);
 
 		/// @brief Метод добавления аргумента командной строки в вектор
-		void Add(const Argument& arg);
+		void Add(std::unique_ptr<Argument> arg);
 
 		/// @brief Метод парсинга аргументов командной строки.
 		/// Он проходит по каждому аргументу командной строки и проверяет, был ли найден аргумент в векторе
@@ -54,6 +54,6 @@ namespace args_parse {
 		/// Значения аргументов. Должно быть ровно @a argc.
 		const char** _argv;
 		/// Массив для хранения объектов аргументов командной строки
-		std::vector<Argument> _args;
+		std::vector<std::unique_ptr<Argument>> _args;
 	};
 }

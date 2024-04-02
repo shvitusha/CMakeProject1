@@ -3,37 +3,34 @@
 #include <args_parse/IntArg.hpp>
 #include <args_parse/ArgsParser.hpp>
 
-int main(int argc, const char** argv) 
+int main(int argc, const char** argv)
 {
-    args_parse::ArgsParser parser(argc, argv);
+	args_parse::ArgsParser parser(argc, argv);
 
-    args_parse::BoolArg help('h', "help");
-    help.SetDescription("Outputs a description of all added command line arguments");
-    args_parse::BoolArg verbose('v', "verbose");
-    verbose.SetDescription("Assigns a boolean value to the argument");
-    args_parse::StringArg input('i', "input");
-    input.SetDescription("Input");
-    args_parse::StringArg output('o', "output");
-    output.SetDescription("Output");
-    args_parse::IntArg number('n', "number");
-    number.SetDescription("Assigns a numeric value to an argument");
+	std::unique_ptr<args_parse::Argument> help(new args_parse::BoolArg('h', "help"));
+	help->SetDescription("Outputs a description of all added command line arguments");
+	std::unique_ptr<args_parse::Argument> verbose(new args_parse::BoolArg('v', "verbose"));
+	verbose->SetDescription("Assigns a boolean value to the argument");
+	std::unique_ptr<args_parse::Argument> input(new args_parse::StringArg('i', "input"));
+	input->SetDescription("Input");
+	std::unique_ptr<args_parse::Argument> output(new args_parse::StringArg('o', "output"));
+	output->SetDescription("Output");
+	std::unique_ptr<args_parse::Argument> number(new args_parse::IntArg('n', "number"));
+	number->SetDescription("Assigns a numeric value to an argument");
 
-    parser.Add(help);
-    parser.Add(verbose);
-    parser.Add(input);
-    parser.Add(output);
-    parser.Add(number);
+	parser.Add(std::move(help));
+	parser.Add(std::move(verbose));
+	parser.Add(std::move(input));
+	parser.Add(std::move(output));
+	parser.Add(std::move(number));
 
-    parser.ShowHelp();
+	parser.ShowHelp();
 
-    if (parser.Parse()) {
-        if (help.HasValue()) {
-            parser.ShowHelp();
-            return 0;
-        }
-        if (!output.getValue().empty()) {
-            std::cout << "Output value: " << output.getValue() << std::endl;
-        }
-    }
-    return 0;
+	if (parser.Parse()) {
+		if (help->HasValue()) {
+			parser.ShowHelp();
+			return 0;
+		}
+	}
+	return 0;
 }

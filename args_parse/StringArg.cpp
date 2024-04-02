@@ -23,7 +23,7 @@ namespace args_parse {
 	}*/
 
 	const Validator* StringArg::GetValidator() const {
-		static StringValidator validator;
+		StringValidator validator;
 		return &validator;
 	}
 }

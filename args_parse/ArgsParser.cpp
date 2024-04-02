@@ -16,8 +16,8 @@ namespace args_parse {
 		_args.clear();
 	}
 
-	void ArgsParser::Add(const Argument& arg) {
-		_args.push_back(arg);
+	void ArgsParser::Add(std::unique_ptr<Argument> arg) {
+		_args.push_back(std::move(arg));
 	}
 
 	void ArgsParser::ShowHelp()
@@ -25,9 +25,9 @@ namespace args_parse {
 		std::cout << "Supported commands:" << std::endl;
 		for (const auto& arg : _args)
 		{
-			if (!arg.GetShortName() == '\0')
-				std::cout << " -" << arg.GetShortName() << " ";
-			std::cout << " --" << arg.GetLongName() << "\t" << arg.GetDescription() << std::endl;
+			if (!arg->GetShortName() == '\0')
+				std::cout << " -" << arg->GetShortName() << " ";
+			std::cout << " --" << arg->GetLongName() << "\t" << arg->GetDescription() << std::endl;
 		}
 	}
 
@@ -54,12 +54,12 @@ namespace args_parse {
 	{
 		for (const auto& arg : _args)
 		{
-			auto longArg = arg.GetLongName();
+			auto longArg = arg->GetLongName();
 			//size_t equalSignPosition = item.find(longArg);
 
 			//строка может быть префиксом
 			if (item.length() <= longArg.length() && longArg.compare(StartingPosition, item.length(), item) == 0)
-				return std::make_unique<Argument>(arg);
+				return std::make_unique<Argument>(*arg);
 
 			/*if (equalSignPosition != std::string::npos && equalSignPosition == StartingPosition && longArg.length() < item.length())
 			{
@@ -83,7 +83,7 @@ namespace args_parse {
 	{
 		for (const auto& arg : _args)
 		{
-			size_t position = item.find(arg.GetShortName());
+			size_t position = item.find(arg->GetShortName());
 			if (position == StartingPosition)
 			{/*
 				if (position + LenghtOneChar < item.length())
@@ -95,7 +95,7 @@ namespace args_parse {
 
 					value = item.substr(position + LenghtOneChar);
 				}*/
-				return std::make_unique<Argument>(arg);
+				return std::make_unique<Argument>(*arg);
 			}
 		}
 
