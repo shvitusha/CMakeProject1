@@ -1,4 +1,5 @@
 #include "ArgsParser.hpp"
+#include "Validator.hpp"
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -170,21 +171,22 @@ namespace args_parse {
 			std::unique_ptr<Argument> arg = FindArgument(argName, argValue);
 
 			if (arg != nullptr) {
-				const Validator* validator = arg->GetValidator();
-
 				if (arg->HasValue()) {
-					if (argValue.empty()) {
-						if (i + 1 < _argc) {
-							argValue = _argv[i + 1];
-							++i;
+					const Validator* validator = arg->GetValidator();
+					if (validator != nullptr) {
+						if (argValue.empty()) {
+							if (i + 1 < _argc) {
+								argValue = _argv[i + 1];
+								++i;
+							}
+							else {
+								std::string errorMessage = "Missing value for argument: " + argName;
+								throw std::invalid_argument(errorMessage);
+							}
 						}
-						else {
-							std::string errorMessage = "Missing value for argument: " + argName;
-							throw std::invalid_argument(errorMessage);
+						if (!argValue.empty() && !validator->ValidValue(argValue)) {
+							std::cerr << "Invalid value for argument: " << argStr << std::endl;
 						}
-					}
-					if (!argValue.empty() && !validator->ValidValue(argValue)) {
-						std::cerr << "Invalid value for argument: " << argStr << std::endl;
 					}
 				}
 			}

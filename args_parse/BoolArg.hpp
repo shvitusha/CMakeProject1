@@ -18,7 +18,7 @@ namespace args_parse {
 		/// ѕроверка соответстви€ переданного аргумента имени
 		bool Matches(const std::string& arg) override;
 
-		const Validator* GetValidator() const override;
+		const Validator* GetValidator() const { return nullptr; }
 		//	///ѕолучение булевого значени€ аргумента
 		//	bool getValue();
 

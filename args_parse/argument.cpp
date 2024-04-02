@@ -18,8 +18,4 @@ namespace args_parse {
 	std::string Argument::GetDescription() const { return _description; };
 
 	void Argument::SetDescription(const std::string& description) { _description = description; }
-
-	const Validator* Argument::GetValidator() const {
-		return nullptr;
-	}
 }

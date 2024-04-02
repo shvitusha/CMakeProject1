@@ -28,7 +28,4 @@ namespace args_parse {
 		}
 		return false;
 	}*/
-	const Validator* BoolArg::GetValidator() const {
-		return Argument::GetValidator();
-	}
 }

@@ -4,14 +4,14 @@
 namespace args_parse {
 	class Validator {
 	public:
-		virtual bool ValidValue(const std::string_view& value) const = 0;
+		virtual bool ValidValue(const std::string& value) const = 0;
 	};
 
 	class IntValidator : public Validator {
 	public:
-		bool ValidValue(const std::string_view& value) const override {
+		bool ValidValue(const std::string& value) const override {
 			try {
-				std::stoi(std::string(value));
+				std::stoi(value);
 				return true;
 			}
 			catch (const std::exception&) {
@@ -22,7 +22,7 @@ namespace args_parse {
 
 	class StringValidator : public Validator {
 	public:
-		bool ValidValue(const std::string_view& value) const override {
+		bool ValidValue(const std::string& value) const override {
 			if (value.length() <= 20)
 				return true;
 			else

@@ -49,7 +49,7 @@ namespace args_parse {
 			return false;
 		}*/
 
-		virtual const Validator* GetValidator() const;
+		virtual const Validator* GetValidator() const { return nullptr; }
 
 	protected:
 		///Короткое описание аргумента
