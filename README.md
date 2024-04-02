@@ -10,4 +10,4 @@
   "--verbose",
   "--out",
   "--out=file.txt"
-]
+  ]
