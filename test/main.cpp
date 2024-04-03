@@ -1,14 +1,43 @@
 #include <catch2/catch_all.hpp>
 
+#include <args_parse/BoolArg.hpp>
+#include <args_parse/StringArg.hpp>
+#include <args_parse/IntArg.hpp>
+#include <args_parse/ArgsParser.hpp>
+
 #include <iostream>
 #include <memory>
 
-TEST_CASE("Dummy", "[dummy]")
-{
-	int a = 0;
-	int b = 1;
+//std::vector<std::unique_ptr<args_parse::Argument>> getTestList();
 
-	REQUIRE(a != b);
+std::vector<std::unique_ptr<args_parse::Argument>> getTestList() {
+	std::vector<std::unique_ptr<args_parse::Argument>> args;
+
+	args.emplace_back(std::make_unique<args_parse::BoolArg>('h', "help"));
+	args.emplace_back(std::make_unique<args_parse::BoolArg>('v', "verbose"));
+	args.emplace_back(std::make_unique<args_parse::StringArg>('i', "input"));
+	args.emplace_back(std::make_unique<args_parse::StringArg>('o', "output"));
+	args.emplace_back(std::make_unique<args_parse::IntArg>('n', "number"));
+
+	return args;
+}
+
+args_parse::ArgsParser getTestParser(int argc, const char** argv) {
+	args_parse::ArgsParser parser(argc, argv);
+	std::vector<std::unique_ptr<args_parse::Argument>> args = getTestList();
+	for (auto& arg : args) {
+		parser.Add(std::move(arg));
+	}
+	return parser;
+}
+
+TEST_CASE("Positive test", "[dummy]")
+{
+	const char* argv[] = { "test","-h -v" };
+	int argc = 3;
+	args_parse::ArgsParser parser = getTestParser(argc, argv);
+
+	REQUIRE(parser.Parse());
 }
 
 TEST_CASE("Section example", "[dummy][section]")

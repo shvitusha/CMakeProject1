@@ -15,6 +15,11 @@ namespace args_parse {
 		/// Конструктор по умолчанию
 		Argument();
 
+		/// @brief  Проверка может ли быть у аргумента значение
+		bool HasValue() const { return _isValue; }
+
+		virtual const Validator* GetValidator() const { return nullptr; }
+
 		/// @brief Деструктор
 		virtual ~Argument() {}
 
@@ -41,15 +46,10 @@ namespace args_parse {
 		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
 		void SetDescription(const std::string& description);
 
-		/// @brief  Проверка может ли быть у аргумента значение
-		bool HasValue() const { return _isValue; }
-
 		/*/// @brief Метод для валидатора значения и сохранения его внутри объекта `Argument`
 		virtual bool ValidValue(const std::string& value) {
 			return false;
 		}*/
-
-		virtual const Validator* GetValidator() const { return nullptr; }
 
 	protected:
 		///Короткое описание аргумента

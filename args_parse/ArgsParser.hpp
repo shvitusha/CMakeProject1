@@ -29,7 +29,7 @@ namespace args_parse {
 
 		void ProcessArgument(const std::string& argStr, const std::string& argName, std::string& argValue, int& i) const;
 
-		std::unique_ptr<Argument> FindArgument(const std::string& argName, std::string& argValue) const;
+		std::unique_ptr<Argument> FindArgument(const std::string& argName) const;
 
 		/// @brief ƒеструктор
 		~ArgsParser();
@@ -39,10 +39,10 @@ namespace args_parse {
 		void ShowHelp();
 
 		/// @brief ћетод дл€ поиска длинного имени, если оно есть
-		std::unique_ptr<Argument> FindLongNameArg(std::string item, std::string& value) const;
+		std::unique_ptr<Argument> FindLongNameArg(std::string item) const;
 
 		/// @brief ћетод поиска короткого имени, если оно есть
-		std::unique_ptr<Argument> FindShortNameArg(std::string item, std::string& value) const;
+		std::unique_ptr<Argument> FindShortNameArg(std::string item) const;
 
 		/// @brief ћетод, который провер€ет €вл€етс€ ли строка оператором.
 		/// ¬озвращает какой оператор был использован
