@@ -1,5 +1,5 @@
-add_test( Dummy [==[D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe]==] Dummy  )
-set_tests_properties( Dummy PROPERTIES WORKING_DIRECTORY [==[D:/Github repositories/CMakeProject1/build/test]==])
+add_test( [==[Positive test]==] [==[D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe]==] [==[Positive test]==]  )
+set_tests_properties( [==[Positive test]==] PROPERTIES WORKING_DIRECTORY [==[D:/Github repositories/CMakeProject1/build/test]==])
 add_test( [==[Section example]==] [==[D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe]==] [==[Section example]==]  )
 set_tests_properties( [==[Section example]==] PROPERTIES WORKING_DIRECTORY [==[D:/Github repositories/CMakeProject1/build/test]==])
 add_test( [==[Assertions for negation]==] [==[D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe]==] [==[Assertions for negation]==]  )
@@ -8,4 +8,4 @@ add_test( [==[Assertions for exceptions]==] [==[D:/Github repositories/CMakeProj
 set_tests_properties( [==[Assertions for exceptions]==] PROPERTIES WORKING_DIRECTORY [==[D:/Github repositories/CMakeProject1/build/test]==])
 add_test( [==[Assertions with matchers]==] [==[D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe]==] [==[Assertions with matchers]==]  )
 set_tests_properties( [==[Assertions with matchers]==] PROPERTIES WORKING_DIRECTORY [==[D:/Github repositories/CMakeProject1/build/test]==])
-set( _unit_test_args_parse_TESTS Dummy [==[Section example]==] [==[Assertions for negation]==] [==[Assertions for exceptions]==] [==[Assertions with matchers]==])
+set( _unit_test_args_parse_TESTS [==[Positive test]==] [==[Section example]==] [==[Assertions for negation]==] [==[Assertions for exceptions]==] [==[Assertions with matchers]==])

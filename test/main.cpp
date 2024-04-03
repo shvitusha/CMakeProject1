@@ -10,23 +10,28 @@
 
 //std::vector<std::unique_ptr<args_parse::Argument>> getTestList();
 
-std::vector<std::unique_ptr<args_parse::Argument>> getTestList() {
-	std::vector<std::unique_ptr<args_parse::Argument>> args;
+std::vector<args_parse::Argument*> getTestList() {
+	std::vector<args_parse::Argument*> args;
+	args_parse::BoolArg* help = new args_parse::BoolArg('h', "help");
+	args_parse::BoolArg* verbose = new args_parse::BoolArg('v', "verbose");
+	args_parse::StringArg* input = new args_parse::StringArg('i', "input");
+	args_parse::StringArg* output = new args_parse::StringArg('o', "output");
+	args_parse::IntArg* number = new args_parse::IntArg('n', "number");
 
-	args.emplace_back(std::make_unique<args_parse::BoolArg>('h', "help"));
-	args.emplace_back(std::make_unique<args_parse::BoolArg>('v', "verbose"));
-	args.emplace_back(std::make_unique<args_parse::StringArg>('i', "input"));
-	args.emplace_back(std::make_unique<args_parse::StringArg>('o', "output"));
-	args.emplace_back(std::make_unique<args_parse::IntArg>('n', "number"));
+	args.push_back(help);
+	args.push_back(verbose);
+	args.push_back(input);
+	args.push_back(output);
+	args.push_back(number);
 
 	return args;
 }
 
 args_parse::ArgsParser getTestParser(int argc, const char** argv) {
 	args_parse::ArgsParser parser(argc, argv);
-	std::vector<std::unique_ptr<args_parse::Argument>> args = getTestList();
+	std::vector<args_parse::Argument*> args = getTestList();
 	for (auto& arg : args) {
-		parser.Add(std::move(arg));
+		parser.Add(arg);
 	}
 	return parser;
 }

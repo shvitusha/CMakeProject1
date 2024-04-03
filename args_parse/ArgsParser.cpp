@@ -16,8 +16,8 @@ namespace args_parse {
 		_args.clear();
 	}
 
-	void ArgsParser::Add(std::unique_ptr<Argument> arg) {
-		_args.push_back(std::move(arg));
+	void ArgsParser::Add(Argument* arg) {
+		_args.push_back(arg);
 	}
 
 	void ArgsParser::ShowHelp()
@@ -47,26 +47,26 @@ namespace args_parse {
 		return OperatorType::Nope;
 	}
 
-	std::unique_ptr<Argument> ArgsParser::FindLongNameArg(std::string item) const
+	Argument* ArgsParser::FindLongNameArg(std::string item) const
 	{
 		for (const auto& arg : _args)
 		{
 			auto longArg = arg->GetLongName();
 			//строка может быть префиксом
 			if (item.length() <= longArg.length() && longArg.compare(StartingPosition, item.length(), item) == 0)
-				return std::make_unique<Argument>(*arg);
+				return arg;
 		}
 		throw std::invalid_argument("Not found");
 	}
 
-	std::unique_ptr<Argument> ArgsParser::FindShortNameArg(std::string item) const
+	Argument* ArgsParser::FindShortNameArg(std::string item) const
 	{
 		for (const auto& arg : _args)
 		{
 			size_t position = item.find(arg->GetShortName());
 			if (position == StartingPosition)
 			{
-				return std::make_unique<Argument>(*arg);
+				return arg;
 			}
 		}
 		throw std::invalid_argument("Transferring multiple values");
@@ -94,9 +94,9 @@ namespace args_parse {
 			}
 
 			ProcessArgument(argStr, argName, argValue, i);
-			std::cout << "\nString: " << argStr << " ; Name: " << argName << " ;" << std::endl;
+			/*std::cout << "\nString: " << argStr << " ; Name: " << argName << " ;" << std::endl;
 			if (!argValue.empty())
-				std::cout << "Value: " << argValue << std::endl;
+				std::cout << "Value: " << argValue << std::endl;*/
 		}
 		return true;
 	}
@@ -138,12 +138,13 @@ namespace args_parse {
 	void ArgsParser::ProcessArgument(const std::string& argStr, const std::string& argName, std::string& argValue, int& i) const
 	{
 		try {
-			std::unique_ptr<Argument> arg = std::move(FindArgument(argName));
+			Argument* arg = std::move(FindArgument(argName));
 
 			if (arg != nullptr) {
 				if (arg->HasValue()) {
 					const Validator* validator = arg->GetValidator();
 					if (validator != nullptr) {
+						std::cout << "\nString: " << argStr << " ; Name: " << argName << " ;" << std::endl;
 						if (argValue.empty()) {
 							if (i + 1 < _argc) {
 								argValue = _argv[i + 1];
@@ -154,7 +155,9 @@ namespace args_parse {
 								throw std::invalid_argument(errorMessage);
 							}
 						}
-						if (!argValue.empty() && !validator->ValidValue(argValue)) {
+						else if (!argValue.empty() && validator->ValidValue(argValue))
+							std::cout << "Value: " << argValue << std::endl;
+						else if (!argValue.empty() && !validator->ValidValue(argValue)) {
 							std::cerr << "Invalid value for argument: " << argStr << std::endl;
 						}
 					}
@@ -170,15 +173,15 @@ namespace args_parse {
 		}
 	}
 
-	std::unique_ptr<Argument> ArgsParser::FindArgument(const std::string& argName) const
+	Argument* ArgsParser::FindArgument(const std::string& argName) const
 	{
-		std::unique_ptr<Argument> arg = nullptr;
+		Argument* arg = nullptr;
 		if (o_type == OperatorType::Long) {
-			arg = std::move(FindLongNameArg(argName));
+			arg = FindLongNameArg(argName);
 			return arg;
 		}
 		else if (o_type == OperatorType::Short) {
-			arg = std::move(FindShortNameArg(argName));
+			arg = FindShortNameArg(argName);
 			return arg;
 		}
 		return nullptr;

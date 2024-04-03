@@ -46,11 +46,6 @@ namespace args_parse {
 		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
 		void SetDescription(const std::string& description);
 
-		/*/// @brief Метод для валидатора значения и сохранения его внутри объекта `Argument`
-		virtual bool ValidValue(const std::string& value) {
-			return false;
-		}*/
-
 	protected:
 		///Короткое описание аргумента
 		char _shortName;
