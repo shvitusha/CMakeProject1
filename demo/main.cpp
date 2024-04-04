@@ -24,8 +24,6 @@ int main(int argc, const char** argv)
 	parser.Add(&output);
 	parser.Add(&number);
 
-	parser.ShowHelp();
-
 	if (parser.Parse()) {
 		if (help.HasValue()) {
 			parser.ShowHelp();

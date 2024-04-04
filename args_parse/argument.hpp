@@ -18,6 +18,8 @@ namespace args_parse {
 		/// @brief  Проверка может ли быть у аргумента значение
 		bool HasValue() const { return _isValue; }
 
+		///@brief Возвращает указатель на объект Validator, используемый для проверки данных.
+		///При отсутствии валидатора возвращается nullptr.
 		virtual const Validator* GetValidator() const { return nullptr; }
 
 		/// @brief Деструктор

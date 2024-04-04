@@ -17,13 +17,8 @@ namespace args_parse {
 
 	void StringArg::setValue(std::string value) { _value = value; }
 
-	/*bool StringArg::ValidValue(const std::string& value) {
-		_value = value;
-		return true;
-	}*/
-
 	const Validator* StringArg::GetValidator() const {
-		StringValidator validator;
+		static StringValidator validator;
 		return &validator;
 	}
 }

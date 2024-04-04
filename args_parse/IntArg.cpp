@@ -20,18 +20,6 @@ namespace args_parse {
 
 	void IntArg::setValue(int value) { _value = value; }
 
-	/*bool IntArg::ValidValue(const string& value) {
-		try
-		{
-			_value = stoi(value);
-			return true;
-		}
-		catch (const invalid_argument&)
-		{
-			return false;
-		}
-	}*/
-
 	const Validator* IntArg::GetValidator() const {
 		static IntValidator validator;
 		return &validator;

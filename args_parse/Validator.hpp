@@ -3,6 +3,7 @@
 #include <string>
 
 namespace args_parse {
+	///јбстрактный базовый класс дл€ валидаторов значений
 	class Validator {
 	public:
 		virtual bool ValidValue(const std::string& value) const = 0;
@@ -31,7 +32,6 @@ namespace args_parse {
 				if (iss >> remaining) {
 					return false; // ƒополнительные символы присутствуют
 				}
-
 				// ѕроверка на выход за пределы диапазона int
 				if (intValue >= std::numeric_limits<int>::min() && intValue <= std::numeric_limits<int>::max()) {
 					return true;
@@ -44,10 +44,17 @@ namespace args_parse {
 	class StringValidator : public Validator {
 	public:
 		bool ValidValue(const std::string& value) const override {
-			if (value.length() <= 20)
-				return true;
-			else
+			//значение может быть пустым
+			if (value.empty()) {
 				return false;
+			}
+			// —оздание потока дл€ преобразовани€ строки
+			std::istringstream iss(value);
+			std::string strValue;
+			// ѕопытка преобразовани€ строки
+			if (iss >> strValue)
+				return true;
+			return false;
 		}
 	};
 }
