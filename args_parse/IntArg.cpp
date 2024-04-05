@@ -10,7 +10,7 @@ namespace args_parse {
 
 	bool IntArg::Matches(const string& arg) {
 		if (arg == string(1, _shortName) || arg == _longName) {
-			//_isDefined = true;
+			_isDefined = true;
 			return true;
 		}
 		return false;
@@ -18,7 +18,10 @@ namespace args_parse {
 
 	int IntArg::getValue() { return _value; }
 
-	void IntArg::setValue(int value) { _value = value; }
+	void IntArg::SetValue(const int value)
+	{
+		_value = value;
+	}
 
 	const Validator* IntArg::GetValidator() const {
 		static IntValidator validator;

@@ -10,7 +10,7 @@ int main(int argc, const char** argv)
 	args_parse::BoolArg help('h', "help");
 	help.SetDescription("Outputs a description of all added command line arguments");
 	args_parse::BoolArg verbose('v', "verbose");
-	verbose.SetDescription("Assigns a boolean value to the argument");
+	verbose.SetDescription("Outputs a verbose of all added command line arguments");
 	args_parse::StringArg input('i', "input");
 	input.SetDescription("Input");
 	args_parse::StringArg output('o', "output");
@@ -25,9 +25,20 @@ int main(int argc, const char** argv)
 	parser.Add(&number);
 
 	if (parser.Parse()) {
-		if (help.HasValue()) {
+		if (help.GetIsDefined()) {
 			parser.ShowHelp();
-			return 0;
+		}
+		if (verbose.GetIsDefined()) {
+			parser.ShowHelpVerbose();
+		}
+		if (output.GetIsDefined()) {
+			std::cout << "Output o value: " << output.GetValue() << std::endl;
+		}
+		if (number.GetIsDefined()) {
+			std::cout << "Input n value: " << number.getValue() << std::endl;
+		}
+		if (input.GetIsDefined()) {
+			std::cout << "Input i value: " << input.GetValue() << std::endl;
 		}
 	}
 	return 0;

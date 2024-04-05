@@ -22,7 +22,7 @@ namespace args_parse {
 		int getValue();
 
 		///ѕрисваивание числового значени€ аргументу
-		void setValue(int value);
+		void SetValue(const int value) override;
 
 		/// @brief ћетод дл€ получени€ указател€ на объект валидатора, св€занного с аргументом.
 		///≈сли дл€ данного аргумента не определен валидатор, метод возвращает nullptr.

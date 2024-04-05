@@ -19,10 +19,10 @@ namespace args_parse {
 		bool Matches(const std::string& arg) override;
 
 		///ѕолучение строкового значени€ аргумента
-		std::string getValue();
+		std::string GetValue() override;
 
 		///ѕрисваивание строкового значени€ аргументу
-		void setValue(std::string value);
+		void SetValue(const std::string value) override;
 
 		/// @brief ћетод дл€ получени€ указател€ на объект валидатора, св€занного с аргументом.
 		///≈сли дл€ данного аргумента не определен валидатор, метод возвращает nullptr.

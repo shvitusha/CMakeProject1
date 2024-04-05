@@ -19,15 +19,16 @@ namespace args_parse {
 		bool Matches(const std::string& arg) override;
 
 		const Validator* GetValidator() const { return nullptr; }
+
 		//	///ѕолучение булевого значени€ аргумента
 		//	bool getValue();
 
-		//	///ѕрисваивание булевого значени€ аргументу
-		//	void setValue(bool value);
+		///ѕрисваивание булевого значени€ аргументу
+		void SetValue(const bool value) override;
 
 		//	bool ValidValue(const std::string& value) override;
 
-		//private:
-		//	bool _value;
+		private:
+			bool _value;
 	};
 }

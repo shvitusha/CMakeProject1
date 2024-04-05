@@ -31,6 +31,21 @@ namespace args_parse {
 		}
 	}
 
+	void ArgsParser::ShowHelpVerbose() const
+	{
+		if (arg->HasValue()) {
+			std::cout << "Arguments, which must contain a value:" << std::endl;
+			for (const auto& arg : _args)
+			{
+				if (!(arg->GetShortName() == '\0'))
+					std::cout << " -" << arg->GetShortName() << " ";
+				std::cout << " --" << arg->GetLongName() << "\t" << arg->GetDescription() << std::endl;
+			}
+			std::cout << "\nTo assign a value to an argument, enter a[-short] or [--long] name\n" +
+				"and a parameter with an [parameter]/[=parametr]/[ parametr]." << std::endl;
+		}
+	}
+
 	OperatorType ArgsParser::IsOperator(std::string operatString)
 	{
 		size_t position = operatString.find("--");
@@ -53,7 +68,8 @@ namespace args_parse {
 		{
 			auto longArg = arg->GetLongName();
 			//строка может быть префиксом
-			if (item.length() > 1 && item.length() <= longArg.length() && longArg.compare(StartingPosition, item.length(), item) == 0)
+			if (item.length() > 1 && item.length() <= longArg.length()
+				&& longArg.compare(StartingPosition, item.length(), item) == 0)
 				return arg;
 		}
 		throw std::invalid_argument("Not found");
@@ -132,6 +148,7 @@ namespace args_parse {
 			Argument* arg = FindArgument(argName);
 			//ссылка может быть null
 			if (arg != nullptr) {
+				arg->SetIsDefined(true);
 				//аргумент может не содержать параметр
 				if (arg->HasValue()) {
 					const Validator* validator = arg->GetValidator();
@@ -149,8 +166,10 @@ namespace args_parse {
 								throw std::invalid_argument(errorMessage);
 							}
 						}
-						else if (!argValue.empty() && validator->ValidValue(argValue))
+						else if (!argValue.empty() && validator->ValidValue(argValue)) {
+							arg->SetValue(argValue);
 							std::cout << "Value: " << argValue << std::endl;
+						}
 						else if (!argValue.empty() && !validator->ValidValue(argValue)) {
 							std::cerr << "Invalid value for argument: " << argStr << std::endl;
 						}

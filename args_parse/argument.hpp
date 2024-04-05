@@ -48,6 +48,17 @@ namespace args_parse {
 		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
 		void SetDescription(const std::string& description);
 
+		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
+		void SetIsDefined(const bool isDefined);
+
+		/// @brief get() для получения значения поля, соответстующего в классе
+		bool GetIsDefined() const { return _isDefined; }
+
+		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
+		virtual void SetValue(const std::string& value) {
+			value = NULL;
+		}
+
 	protected:
 		///Короткое описание аргумента
 		char _shortName;
@@ -57,5 +68,7 @@ namespace args_parse {
 		std::string _description;
 		///Флаг на наличие параметра
 		bool _isValue;
+		///Флаг на определение аргумента
+		bool _isDefined;
 	};
 }

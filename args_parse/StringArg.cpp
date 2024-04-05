@@ -13,12 +13,16 @@ namespace args_parse {
 		return false;
 	}
 
-	std::string StringArg::getValue() { return _value; }
+	std::string StringArg::GetValue() { return _value; }
 
-	void StringArg::setValue(std::string value) { _value = value; }
+	void StringArg::SetValue(const std::string value)
+	{
+		_value = value;
+	}
 
 	const Validator* StringArg::GetValidator() const {
 		static StringValidator validator;
 		return &validator;
 	}
+	
 }

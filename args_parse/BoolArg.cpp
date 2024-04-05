@@ -7,16 +7,19 @@ namespace args_parse {
 
 	bool BoolArg::Matches(const std::string& arg) {
 		if (arg == std::string(1, _shortName) || arg == _longName) {
-			//_isDefined = true;
+			_isDefined = true;
 			return true;
 		}
 		return false;
 	}
 
+	void BoolArg::SetValue(const bool value)
+	{
+		_value = value;
+	}
+
 	/*bool BoolArg::getValue(){ return _value; }
-
-	void BoolArg::setValue(bool value){ _value = value; }
-
+	*
 	bool BoolArg::ValidValue(const std::string& value) {
 		if (value == "true" || value == "True" || value == "TRUE") {
 			_value = true;
@@ -28,4 +31,6 @@ namespace args_parse {
 		}
 		return false;
 	}*/
+
+
 }
