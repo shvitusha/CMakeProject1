@@ -7,10 +7,10 @@ namespace args_parse {
 	public:
 		/// @brief  онструктор производного класса.
 		///  онструктор дл€ случа€, когда есть как короткое, так и длинное им€
-		IntArg(char shortName, const char* longName, int value);
+		IntArg(char shortName, const char* longName);
 
 		///  онструктор дл€ случа€, когда нет короткого имени
-		IntArg(const char* longName, int value);
+		IntArg(const char* longName);
 
 		///наследование конструктора базового класса
 		using Argument::Argument;
@@ -22,11 +22,11 @@ namespace args_parse {
 		int getValue();
 
 		///ѕрисваивание числового значени€ аргументу
-		void setValue(int value);
+		void SetValue(const int value) override;
 
-		bool ValidValue(const std::string& value) override;
-		
-		bool HasValue() const override;
+		/// @brief ћетод дл€ получени€ указател€ на объект валидатора, св€занного с аргументом.
+		///≈сли дл€ данного аргумента не определен валидатор, метод возвращает nullptr.
+		const Validator* GetValidator() const override;
 
 	private:
 		///«начение аргумента

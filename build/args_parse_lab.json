@@ -1,0 +1,66 @@
+[
+  {
+    "Name": "Parse value",
+    "Command": "D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe",
+    "Arguments": [
+      "Parse value"
+    ],
+    "WorkingDirectory": "D:/Github repositories/CMakeProject1/build/test",
+    "ProjectFile": null,
+    "LineNumber": -1,
+    "Environment": {},
+    "ExpectsFailure": false,
+    "PassRegularExpression": null,
+    "FailRegularExpression": null,
+    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
+    "TimeoutInMs": -1
+  },
+  {
+    "Name": "IntValidValue",
+    "Command": "D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe",
+    "Arguments": [
+      "IntValidValue"
+    ],
+    "WorkingDirectory": "D:/Github repositories/CMakeProject1/build/test",
+    "ProjectFile": null,
+    "LineNumber": -1,
+    "Environment": {},
+    "ExpectsFailure": false,
+    "PassRegularExpression": null,
+    "FailRegularExpression": null,
+    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
+    "TimeoutInMs": -1
+  },
+  {
+    "Name": "StringValidValue",
+    "Command": "D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe",
+    "Arguments": [
+      "StringValidValue"
+    ],
+    "WorkingDirectory": "D:/Github repositories/CMakeProject1/build/test",
+    "ProjectFile": null,
+    "LineNumber": -1,
+    "Environment": {},
+    "ExpectsFailure": false,
+    "PassRegularExpression": null,
+    "FailRegularExpression": null,
+    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
+    "TimeoutInMs": -1
+  },
+  {
+    "Name": "FindArgument",
+    "Command": "D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe",
+    "Arguments": [
+      "FindArgument"
+    ],
+    "WorkingDirectory": "D:/Github repositories/CMakeProject1/build/test",
+    "ProjectFile": null,
+    "LineNumber": -1,
+    "Environment": {},
+    "ExpectsFailure": false,
+    "PassRegularExpression": null,
+    "FailRegularExpression": null,
+    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
+    "TimeoutInMs": -1
+  }
+]

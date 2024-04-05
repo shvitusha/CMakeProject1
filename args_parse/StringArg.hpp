@@ -10,23 +10,23 @@ namespace args_parse {
 
 		/// @brief  онструктор производного класса.
 		///  онструктор дл€ случа€, когда есть как короткое, так и длинное им€
-		StringArg(char shortName, const char* longName, std::string value);
+		StringArg(char shortName, const char* longName);
 
 		///  онструктор дл€ случа€, когда нет короткого имени
-		StringArg(const char* longName, std::string value);
+		StringArg(const char* longName);
 
 		/// ѕроверка соответстви€ переданного аргумента имени
 		bool Matches(const std::string& arg) override;
 
 		///ѕолучение строкового значени€ аргумента
-		std::string getValue();
+		std::string GetValue() override;
 
 		///ѕрисваивание строкового значени€ аргументу
-		void setValue(std::string value);
+		void SetValue(const std::string value) override;
 
-		bool ValidValue(const std::string& value) override;
-
-		bool HasValue() const override;
+		/// @brief ћетод дл€ получени€ указател€ на объект валидатора, св€занного с аргументом.
+		///≈сли дл€ данного аргумента не определен валидатор, метод возвращает nullptr.
+		const Validator* GetValidator() const override;
 
 	private:
 		std::string _value;
