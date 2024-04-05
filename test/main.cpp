@@ -58,7 +58,7 @@ static std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse:
 	return { parser, move(vector) };
 }
 
-TEST_CASE("Parse value", "[dummy][section]") {
+TEST_CASE("Parse value", "[ArgsParser]") {
 	const char* argv[] = { "program", "-v", "--output=file.txt", "-n10", "--number=27" };
 	int argc = sizeof(argv) / sizeof(const char*);
 	std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(argc, argv);
@@ -87,7 +87,7 @@ TEST_CASE("Parse value", "[dummy][section]") {
 	}
 }
 
-TEST_CASE("IntValidValue", "[dummy][section]") {
+TEST_CASE("Int ValidValue", "[IntValidValue]") {
 	args_parse::IntValidator validator;
 
 	SECTION("Valid integer values") {
@@ -101,7 +101,7 @@ TEST_CASE("IntValidValue", "[dummy][section]") {
 	}
 }
 
-TEST_CASE("StringValidValue", "[dummy][section]") {
+TEST_CASE("String ValidValue", "[StringValidator]") {
 	args_parse::StringValidator validator;
 
 	SECTION("Valid string values") {
@@ -114,8 +114,8 @@ TEST_CASE("StringValidValue", "[dummy][section]") {
 	}
 }
 
-TEST_CASE("FindArgument", "[dummy][section]") {
-	const char* argv[] = { "program", "-h", "--output=file.txt", "-n25", "--number=2", "--string", };
+TEST_CASE("FindArgument", "[ArgsParser]") {
+	const char* argv[] = { "program", "-h", "--output=file.txt", "-n25", "--number=2", "--string", "--output-path=path" };
 	int argc = sizeof(argv) / sizeof(const char*);
 	std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(argc, argv);
 	args_parse::ArgsParser parser = pair.first;
@@ -127,6 +127,11 @@ TEST_CASE("FindArgument", "[dummy][section]") {
 
 	args_parse::StringArg longArg("", "string");
 	parser.Add(&longArg);
+	args_parse::StringArg nonUnique("", "output-path");
+
+	SECTION("Non-unique argument addition") {
+		REQUIRE_THROWS_AS(parser.Add(&nonUnique), std::invalid_argument);
+	}
 
 	SECTION("Finding non-existing arguments") {
 		REQUIRE_THROWS_AS(parser.FindArgument("x"), std::invalid_argument);

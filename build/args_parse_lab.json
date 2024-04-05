@@ -12,14 +12,14 @@
     "ExpectsFailure": false,
     "PassRegularExpression": null,
     "FailRegularExpression": null,
-    "TargetName": null,
+    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
     "TimeoutInMs": -1
   },
   {
-    "Name": "IntValidValue",
+    "Name": "Int ValidValue",
     "Command": "D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe",
     "Arguments": [
-      "IntValidValue"
+      "Int ValidValue"
     ],
     "WorkingDirectory": "D:/Github repositories/CMakeProject1/build/test",
     "ProjectFile": null,
@@ -28,14 +28,14 @@
     "ExpectsFailure": false,
     "PassRegularExpression": null,
     "FailRegularExpression": null,
-    "TargetName": null,
+    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
     "TimeoutInMs": -1
   },
   {
-    "Name": "StringValidValue",
+    "Name": "String ValidValue",
     "Command": "D:/Github repositories/CMakeProject1/build/bin/Debug/_unit_test_args_parse.exe",
     "Arguments": [
-      "StringValidValue"
+      "String ValidValue"
     ],
     "WorkingDirectory": "D:/Github repositories/CMakeProject1/build/test",
     "ProjectFile": null,
@@ -44,7 +44,7 @@
     "ExpectsFailure": false,
     "PassRegularExpression": null,
     "FailRegularExpression": null,
-    "TargetName": null,
+    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
     "TimeoutInMs": -1
   },
   {
@@ -60,7 +60,7 @@
     "ExpectsFailure": false,
     "PassRegularExpression": null,
     "FailRegularExpression": null,
-    "TargetName": null,
+    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
     "TimeoutInMs": -1
   }
 ]

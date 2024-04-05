@@ -10,6 +10,12 @@ namespace args_parse {
 		Nope
 	};
 
+	struct BaseParametrs {
+		const std::string& argStr;
+		std::string& argName;
+		std::string& argValue;
+	};
+
 	class ArgsParser {
 	public:
 		/// @brief Конструктор класса.
@@ -25,15 +31,17 @@ namespace args_parse {
 
 		/// @brief Метод для разбора длинных аргументов командной строки.
 		/// Извлекает имя и значение аргумента для дальнейшей обработки.
-		void ParseLongArgument(const std::string& argStr, std::string& argName, std::string& argValue);
+		void ParseLongArgument(BaseParametrs parametrs);
 
 		/// @brief Метод для разбора коротких аргументов командной строки.
 		/// Извлекает имя и значение аргумента для дальнейшей обработки.
-		void ParseShortArgument(const std::string& argStr, std::string& argName, std::string& argValue);
+		void ParseShortArgument(BaseParametrs parametrs) const;
 
 		/// @brief Метод для обработки одного аргумента командной строки.
 		/// Также проверяет его наличие, наличие у него значения, если да, то его проверку.
-		void ProcessArgument(const std::string& argStr, const std::string& argName, std::string& argValue, int& i) const;
+		void ProcessArgument(BaseParametrs parametrs, int& i) const;
+
+		void ValidationValue(const Validator* validator, BaseParametrs& parametrs, Argument* arg, int& i) const;
 
 		/// @brief Метод поиска аргумента.
 		/// В зависимости от оператора вызывает методы поиска короткого или длинного имени.

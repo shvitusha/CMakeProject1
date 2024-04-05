@@ -70,15 +70,27 @@ namespace args_parse {
 
 	Argument* ArgsParser::FindLongNameArg(std::string item) const
 	{
+		Argument* foundArg = nullptr;
+		int matchingCount = 0;
+
 		for (const auto& arg : _args)
 		{
 			auto longArg = arg->GetLongName();
 			//строка может быть префиксом
 			if (item.length() > 1 && item.length() <= longArg.length()
-				&& longArg.compare(StartingPosition, item.length(), item) == 0)
-				return arg;
+				&& longArg.compare(StartingPosition, item.length(), item) == 0) {
+				matchingCount++;
+				foundArg = arg;
+			}
 		}
-		throw std::invalid_argument("Not found");
+		if (matchingCount == 0) {
+			throw std::invalid_argument("Not found");
+		}
+		else if (matchingCount > 1) {
+			throw std::invalid_argument("Prefix is not unique");
+		}
+
+		return foundArg;
 	}
 
 	Argument* ArgsParser::FindShortNameArg(std::string item) const
@@ -101,101 +113,99 @@ namespace args_parse {
 			o_type = IsOperator(argStr);
 			std::string argName;
 			std::string argValue;
+			BaseParametrs parametrs{ argStr, argName, argValue };
 			//обработка длинного аргумента
 			if (argStr.substr(StartingPosition, LenghtTwoChar) == "--")
-				ParseLongArgument(argStr, argName, argValue);
+				ParseLongArgument(parametrs);
 			//обработка короткого аргумента
 			else if (argStr[0] == '-')
-				ParseShortArgument(argStr, argName, argValue);
+				ParseShortArgument(parametrs);
 			//строка может быть без аргументов
 			else {
-				std::string errorMessage = "Invalid argument format: " + argStr;
+				std::string errorMessage = "Invalid argument format: " + parametrs.argStr;
 				throw std::invalid_argument(errorMessage);
 			}
-			ProcessArgument(argStr, argName, argValue, i);
+			ProcessArgument(parametrs, i);
 		}
 		return true;
 	}
 
-	void ArgsParser::ParseLongArgument(const std::string& argStr, std::string& argName, std::string& argValue)
+	void ArgsParser::ParseLongArgument(BaseParametrs parametrs)
 	{
-		argName = argStr.substr(LenghtTwoChar);
-		size_t equalPosition = argName.find('=');
-		size_t spacePosition = argName.find(' ');
+		parametrs.argName = parametrs.argStr.substr(LenghtTwoChar);
+		size_t equalPosition = parametrs.argName.find('=');
+		size_t spacePosition = parametrs.argName.find(' ');
 		//может не содержать =
 		if (equalPosition != std::string::npos)
 		{
-			argValue = argName.substr(equalPosition + LenghtOneChar);
-			argName = argName.substr(StartingPosition, equalPosition);
+			parametrs.argValue = parametrs.argName.substr(equalPosition + LenghtOneChar);
+			parametrs.argName = parametrs.argName.substr(StartingPosition, equalPosition);
 		}
 		//может не содержать пробел
 		else if (spacePosition != std::string::npos)
 		{
-			argValue = argName.substr(spacePosition + LenghtOneChar);
-			argName = argName.substr(StartingPosition, spacePosition);
+			parametrs.argValue = parametrs.argName.substr(spacePosition + LenghtOneChar);
+			parametrs.argName = parametrs.argName.substr(StartingPosition, spacePosition);
 		}
 		// случай, когда не содержит ни одного из указанных разделителей
-		else if (argStr.length() > 3)
-			argValue = argStr.substr(argName.length() + LenghtTwoChar);
+		else if (parametrs.argStr.length() > 3)
+			parametrs.argValue = parametrs.argStr.substr(parametrs.argName.length() + LenghtTwoChar);
 	}
 
-	void ArgsParser::ParseShortArgument(const std::string& argStr, std::string& argName, std::string& argValue)
+	void ArgsParser::ParseShortArgument(BaseParametrs parametrs) const
 	{
-		argName = argStr.substr(LenghtOneChar, LenghtOneChar);
-		if (argStr.length() > LenghtTwoChar && (argStr[2] == '=' || argStr[2] == ' '))
-			argValue = argStr.substr(3);
-		else if (argStr.length() > LenghtTwoChar)
-			argValue = argStr.substr(LenghtTwoChar);
+		parametrs.argName = parametrs.argStr.substr(LenghtOneChar, LenghtOneChar);
+		if (parametrs.argStr.length() > LenghtTwoChar && (parametrs.argStr[2] == '=' || parametrs.argStr[2] == ' '))
+			parametrs.argValue = parametrs.argStr.substr(3);
+		else if (parametrs.argStr.length() > LenghtTwoChar)
+			parametrs.argValue = parametrs.argStr.substr(LenghtTwoChar);
 	}
 
-	void ArgsParser::ProcessArgument(const std::string& argStr, const std::string& argName, std::string& argValue, int& i) const
+	void ArgsParser::ProcessArgument(BaseParametrs parametrs, int& i) const
 	{
 		try {
-			Argument* arg = FindArgument(argName);
+			Argument* arg = FindArgument(parametrs.argName);
 			//ссылка может быть null
 			if (arg != nullptr) {
 				arg->SetIsDefined(true);
 				//аргумент может не содержать параметр
 				if (arg->HasValue()) {
 					const Validator* validator = arg->GetValidator();
-					//валидатор может быть null
-					if (validator != nullptr) {
-						std::cout << "\nString: " << argStr << " ; Name: " << argName << " ;" << std::endl;
-						//в случае, если аргумент принимает значение, значение может быть пустым
-						if (argValue.empty()) {
-							if (i + 1 < _argc) {
-								argValue = _argv[i + 1];
-								++i;
-							}
-							else {
-								std::string errorMessage = "Missing value for argument: " + argName;
-								throw std::invalid_argument(errorMessage);
-							}
-						}
-						else if (!argValue.empty() && validator->ValidValue(argValue)) {
-							arg->SetValue(argValue);
-							std::cout << "Value: " << argValue << std::endl;
-						}
-						else if (!argValue.empty() && !validator->ValidValue(argValue)) {
-							std::cerr << "Invalid value for argument: " << argStr << std::endl;
-						}
-					}
+					ValidationValue(validator, parametrs, arg, i);
 				}
-				//когда аргумент указан для вывода справки
-				else if (arg->GetLongName() == "help")
-					ShowHelp();
-				else if (arg->GetLongName() == "verbose")
-					ShowHelpVerbose();
-				else
-					std::cout << "\nString: " << argStr << " ; Name: " << argName << " ;" << std::endl;
 			}
 			else {
-				std::cerr << "Unknown argument: " << argStr << std::endl;
+				std::cerr << "Unknown argument: " << parametrs.argStr << std::endl;
 			}
 		}
 		catch (const std::invalid_argument& e) {
 			std::string errorMessage = e.what();
 			throw std::invalid_argument(errorMessage);
+		}
+	}
+
+	void ArgsParser::ValidationValue(const Validator* validator, BaseParametrs& parametrs, Argument* arg, int& i) const {
+		//валидатор может быть null
+		if (validator != nullptr) {
+			std::cout << "\nString: " << parametrs.argStr << " ; Name: " << parametrs.argName << " ;" << std::endl;
+			//в случае, если аргумент принимает значение, значение может быть пустым
+			if (parametrs.argValue.empty()) {
+				if (i + 1 < _argc) {
+					parametrs.argValue = _argv[i + 1];
+					++i;
+				}
+				else {
+					std::string errorMessage = "Missing value for argument: " + parametrs.argName;
+					throw std::invalid_argument(errorMessage);
+				}
+			}
+			else if (!parametrs.argValue.empty() && validator->ValidValue(parametrs.argValue)) {
+				arg->SetValue(parametrs.argValue);
+				std::cout << "Value: " << parametrs.argValue << std::endl;
+			}
+			else if (!parametrs.argValue.empty() && !validator->ValidValue(parametrs.argValue)) {
+				std::cerr << "Invalid value for argument: " << parametrs.argStr << std::endl;
+			}
 		}
 	}
 
