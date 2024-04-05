@@ -6,6 +6,7 @@ project(args_parse_lib LANGUAGES CXX)
 
 # Определяем библиотеку и указываем из чего она состоит.
 add_library(args_parse STATIC Validator.hpp argument.cpp argument.hpp ArgsParser.cpp ArgsParser.hpp IntArg.cpp IntArg.hpp BoolArg.cpp BoolArg.hpp StringArg.cpp StringArg.hpp)
+add_compile_options(/utf-8)
 
 target_include_directories(args_parse PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
