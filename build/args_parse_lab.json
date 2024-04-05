@@ -12,7 +12,7 @@
     "ExpectsFailure": false,
     "PassRegularExpression": null,
     "FailRegularExpression": null,
-    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
+    "TargetName": null,
     "TimeoutInMs": -1
   },
   {
@@ -28,7 +28,7 @@
     "ExpectsFailure": false,
     "PassRegularExpression": null,
     "FailRegularExpression": null,
-    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
+    "TargetName": null,
     "TimeoutInMs": -1
   },
   {
@@ -44,7 +44,7 @@
     "ExpectsFailure": false,
     "PassRegularExpression": null,
     "FailRegularExpression": null,
-    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
+    "TargetName": null,
     "TimeoutInMs": -1
   },
   {
@@ -60,7 +60,7 @@
     "ExpectsFailure": false,
     "PassRegularExpression": null,
     "FailRegularExpression": null,
-    "TargetName": "_unit_test_args_parse.exe (bin\\Debug\\_unit_test_args_parse.exe)",
+    "TargetName": null,
     "TimeoutInMs": -1
   }
 ]

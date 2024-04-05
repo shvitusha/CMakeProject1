@@ -12,9 +12,9 @@ int main(int argc, const char** argv)
 	args_parse::BoolArg verbose('v', "verbose");
 	verbose.SetDescription("Outputs a verbose of all added command line arguments");
 	args_parse::StringArg input('i', "input");
-	input.SetDescription("Input");
+	input.SetDescription("Input (filename)");
 	args_parse::StringArg output('o', "output");
-	output.SetDescription("Output");
+	output.SetDescription("Output (filename)");
 	args_parse::IntArg number('n', "number");
 	number.SetDescription("Assigns a numeric value to an argument");
 

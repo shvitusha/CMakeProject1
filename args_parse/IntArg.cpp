@@ -18,9 +18,9 @@ namespace args_parse {
 
 	int IntArg::getValue() { return _value; }
 
-	void IntArg::SetValue(const int value)
+	void IntArg::SetValue(std::string& value)
 	{
-		_value = value;
+		_value = stoi(value);
 	}
 
 	const Validator* IntArg::GetValidator() const {

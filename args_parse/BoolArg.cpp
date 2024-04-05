@@ -13,7 +13,7 @@ namespace args_parse {
 		return false;
 	}
 
-	void BoolArg::SetValue(const bool value)
+	void BoolArg::SetValue(std::string& value)
 	{
 		_value = value;
 	}

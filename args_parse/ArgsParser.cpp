@@ -17,6 +17,12 @@ namespace args_parse {
 	}
 
 	void ArgsParser::Add(Argument* arg) {
+		// Такое имя аргумента может уже существовать
+		for (const auto& existingArg : _args) {
+			if (existingArg->GetLongName() == arg->GetLongName()) {
+				throw std::invalid_argument("Argument with the same name already exists");
+			}
+		}
 		_args.push_back(arg);
 	}
 
@@ -33,17 +39,17 @@ namespace args_parse {
 
 	void ArgsParser::ShowHelpVerbose() const
 	{
-		if (arg->HasValue()) {
-			std::cout << "Arguments, which must contain a value:" << std::endl;
-			for (const auto& arg : _args)
-			{
+		std::cout << "\nArguments, which must contain a value:" << std::endl;
+		for (const auto& arg : _args)
+		{
+			if (arg->HasValue()) {
 				if (!(arg->GetShortName() == '\0'))
 					std::cout << " -" << arg->GetShortName() << " ";
 				std::cout << " --" << arg->GetLongName() << "\t" << arg->GetDescription() << std::endl;
 			}
-			std::cout << "\nTo assign a value to an argument, enter a[-short] or [--long] name\n" +
-				"and a parameter with an [parameter]/[=parametr]/[ parametr]." << std::endl;
 		}
+		std::cout << "To assign a value to an argument, enter a[-short] or [--long] name" << std::endl;
+		std::cout << "and a parameter with an [parameter]/[=parametr]/[ parametr].\n" << std::endl;
 	}
 
 	OperatorType ArgsParser::IsOperator(std::string operatString)
@@ -176,8 +182,10 @@ namespace args_parse {
 					}
 				}
 				//когда аргумент указан для вывода справки
-				else if (argName == "h")
+				else if (arg->GetLongName() == "help")
 					ShowHelp();
+				else if (arg->GetLongName() == "verbose")
+					ShowHelpVerbose();
 				else
 					std::cout << "\nString: " << argStr << " ; Name: " << argName << " ;" << std::endl;
 			}

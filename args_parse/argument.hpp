@@ -55,8 +55,8 @@ namespace args_parse {
 		bool GetIsDefined() const { return _isDefined; }
 
 		/// @brief Метод set() для присваивания значения полю, соответстующему в классе
-		virtual void SetValue(const std::string& value) {
-			value = NULL;
+		virtual void SetValue(std::string& value) {
+			value = std::string();
 		}
 
 	protected:

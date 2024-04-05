@@ -24,11 +24,11 @@ namespace args_parse {
 		//	bool getValue();
 
 		///ѕрисваивание булевого значени€ аргументу
-		void SetValue(const bool value) override;
+		void SetValue(std::string& value) override;
 
 		//	bool ValidValue(const std::string& value) override;
 
 		private:
-			bool _value;
+			std::string _value;
 	};
 }

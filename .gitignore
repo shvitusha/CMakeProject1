@@ -38,3 +38,5 @@
 
 .vs
 .*.sw?
+
+CMakeUserPresets.json
