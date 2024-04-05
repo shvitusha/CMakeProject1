@@ -3,7 +3,7 @@
 #include <string>
 
 namespace args_parse {
-	///Àáñòğàêòíûé áàçîâûé êëàññ äëÿ âàëèäàòîğîâ çíà÷åíèé
+	///ĞĞ±ÑÑ‚Ñ€Ğ°ĞºÑ‚Ğ½Ñ‹Ğ¹ Ğ±Ğ°Ğ·Ğ¾Ğ²Ñ‹Ğ¹ ĞºĞ»Ğ°ÑÑ Ğ´Ğ»Ñ Ğ²Ğ°Ğ»Ğ¸Ğ´Ğ°Ñ‚Ğ¾Ñ€Ğ¾Ğ² Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğ¹
 	class Validator {
 	public:
 		virtual bool ValidValue(const std::string& value) const = 0;
@@ -22,17 +22,17 @@ namespace args_parse {
 			if (value.empty()) {
 				return false;
 			}
-			// Ñîçäàíèå ïîòîêà äëÿ ïğåîáğàçîâàíèÿ ñòğîêè â int
+			// Ğ¡Ğ¾Ğ·Ğ´Ğ°Ğ½Ğ¸Ğµ Ğ¿Ğ¾Ñ‚Ğ¾ĞºĞ° Ğ´Ğ»Ñ Ğ¿Ñ€ĞµĞ¾Ğ±Ñ€Ğ°Ğ·Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ ÑÑ‚Ñ€Ğ¾ĞºĞ¸ Ğ² int
 			std::istringstream iss(value);
 			int intValue;
-			// Ïîïûòêà ïğåîáğàçîâàíèÿ ñòğîêè â int
+			// ĞŸĞ¾Ğ¿Ñ‹Ñ‚ĞºĞ° Ğ¿Ñ€ĞµĞ¾Ğ±Ñ€Ğ°Ğ·Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ ÑÑ‚Ñ€Ğ¾ĞºĞ¸ Ğ² int
 			if (iss >> intValue) {
-				// Ïğîâåğêà íàëè÷èÿ äîïîëíèòåëüíûõ ñèìâîëîâ ïîñëå ÷èñëà
+				// ĞŸÑ€Ğ¾Ğ²ĞµÑ€ĞºĞ° Ğ½Ğ°Ğ»Ğ¸Ñ‡Ğ¸Ñ Ğ´Ğ¾Ğ¿Ğ¾Ğ»Ğ½Ğ¸Ñ‚ĞµĞ»ÑŒĞ½Ñ‹Ñ… ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ğ¾Ğ² Ğ¿Ğ¾ÑĞ»Ğµ Ñ‡Ğ¸ÑĞ»Ğ°
 				char remaining;
 				if (iss >> remaining) {
-					return false; // Äîïîëíèòåëüíûå ñèìâîëû ïğèñóòñòâóşò
+					return false; // Ğ”Ğ¾Ğ¿Ğ¾Ğ»Ğ½Ğ¸Ñ‚ĞµĞ»ÑŒĞ½Ñ‹Ğµ ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ñ‹ Ğ¿Ñ€Ğ¸ÑÑƒÑ‚ÑÑ‚Ğ²ÑƒÑÑ‚
 				}
-				// Ïğîâåğêà íà âûõîä çà ïğåäåëû äèàïàçîíà int
+				// ĞŸÑ€Ğ¾Ğ²ĞµÑ€ĞºĞ° Ğ½Ğ° Ğ²Ñ‹Ñ…Ğ¾Ğ´ Ğ·Ğ° Ğ¿Ñ€ĞµĞ´ĞµĞ»Ñ‹ Ğ´Ğ¸Ğ°Ğ¿Ğ°Ğ·Ğ¾Ğ½Ğ° int
 				if (intValue >= std::numeric_limits<int>::min() && intValue <= std::numeric_limits<int>::max()) {
 					return true;
 				}
@@ -44,14 +44,14 @@ namespace args_parse {
 	class StringValidator : public Validator {
 	public:
 		bool ValidValue(const std::string& value) const override {
-			//çíà÷åíèå ìîæåò áûòü ïóñòûì
+			//Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ±Ñ‹Ñ‚ÑŒ Ğ¿ÑƒÑÑ‚Ñ‹Ğ¼
 			if (value.empty()) {
 				return false;
 			}
-			// Ñîçäàíèå ïîòîêà äëÿ ïğåîáğàçîâàíèÿ ñòğîêè
+			// Ğ¡Ğ¾Ğ·Ğ´Ğ°Ğ½Ğ¸Ğµ Ğ¿Ğ¾Ñ‚Ğ¾ĞºĞ° Ğ´Ğ»Ñ Ğ¿Ñ€ĞµĞ¾Ğ±Ñ€Ğ°Ğ·Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ ÑÑ‚Ñ€Ğ¾ĞºĞ¸
 			std::istringstream iss(value);
 			std::string strValue;
-			// Ïîïûòêà ïğåîáğàçîâàíèÿ ñòğîêè
+			// ĞŸĞ¾Ğ¿Ñ‹Ñ‚ĞºĞ° Ğ¿Ñ€ĞµĞ¾Ğ±Ñ€Ğ°Ğ·Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ ÑÑ‚Ñ€Ğ¾ĞºĞ¸
 			if (iss >> strValue)
 				return true;
 			return false;
