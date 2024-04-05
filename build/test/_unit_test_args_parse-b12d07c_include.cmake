@@ -1,5 +1,0 @@
-if(EXISTS "D:/Github repositories/CMakeProject1/build/test/_unit_test_args_parse-b12d07c_tests.cmake")
-  include("D:/Github repositories/CMakeProject1/build/test/_unit_test_args_parse-b12d07c_tests.cmake")
-else()
-  add_test(_unit_test_args_parse_NOT_BUILT-b12d07c _unit_test_args_parse_NOT_BUILT-b12d07c)
-endif()

@@ -34,9 +34,9 @@
 /out
 /cmake_build*
 /_doc
-/build
+build
 
-CMakeUserPresets.json
+/CMakeUserPresets.json
 
 .vs
 .*.sw?
