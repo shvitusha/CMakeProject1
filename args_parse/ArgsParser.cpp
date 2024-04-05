@@ -114,68 +114,69 @@ namespace args_parse {
 			std::string argName;
 			std::string argValue;
 			BaseParametrs parametrs{ argStr, argName, argValue };
+			BaseParametrs* p_param = &parametrs;
 			//обработка длинного аргумента
 			if (argStr.substr(StartingPosition, LenghtTwoChar) == "--")
-				ParseLongArgument(parametrs);
+				ParseLongArgument(*p_param);
 			//обработка короткого аргумента
 			else if (argStr[0] == '-')
-				ParseShortArgument(parametrs);
+				ParseShortArgument(*p_param);
 			//строка может быть без аргументов
 			else {
-				std::string errorMessage = "Invalid argument format: " + parametrs.argStr;
+				std::string errorMessage = "Invalid argument format: " + p_param->argStr;
 				throw std::invalid_argument(errorMessage);
 			}
-			ProcessArgument(parametrs, i);
+			ProcessArgument(*p_param, i);
 		}
 		return true;
 	}
 
-	void ArgsParser::ParseLongArgument(BaseParametrs parametrs)
+	void ArgsParser::ParseLongArgument(BaseParametrs& p_param)
 	{
-		parametrs.argName = parametrs.argStr.substr(LenghtTwoChar);
-		size_t equalPosition = parametrs.argName.find('=');
-		size_t spacePosition = parametrs.argName.find(' ');
+		p_param.argName = p_param.argStr.substr(LenghtTwoChar);
+		size_t equalPosition = p_param.argName.find('=');
+		size_t spacePosition = p_param.argName.find(' ');
 		//может не содержать =
 		if (equalPosition != std::string::npos)
 		{
-			parametrs.argValue = parametrs.argName.substr(equalPosition + LenghtOneChar);
-			parametrs.argName = parametrs.argName.substr(StartingPosition, equalPosition);
+			p_param.argValue = p_param.argName.substr(equalPosition + LenghtOneChar);
+			p_param.argName = p_param.argName.substr(StartingPosition, equalPosition);
 		}
 		//может не содержать пробел
 		else if (spacePosition != std::string::npos)
 		{
-			parametrs.argValue = parametrs.argName.substr(spacePosition + LenghtOneChar);
-			parametrs.argName = parametrs.argName.substr(StartingPosition, spacePosition);
+			p_param.argValue = p_param.argName.substr(spacePosition + LenghtOneChar);
+			p_param.argName = p_param.argName.substr(StartingPosition, spacePosition);
 		}
 		// случай, когда не содержит ни одного из указанных разделителей
-		else if (parametrs.argStr.length() > 3)
-			parametrs.argValue = parametrs.argStr.substr(parametrs.argName.length() + LenghtTwoChar);
+		else if (p_param.argStr.length() > 3)
+			p_param.argValue = p_param.argStr.substr(p_param.argName.length() + LenghtTwoChar);
 	}
 
-	void ArgsParser::ParseShortArgument(BaseParametrs parametrs) const
+	void ArgsParser::ParseShortArgument(BaseParametrs& p_param) const
 	{
-		parametrs.argName = parametrs.argStr.substr(LenghtOneChar, LenghtOneChar);
-		if (parametrs.argStr.length() > LenghtTwoChar && (parametrs.argStr[2] == '=' || parametrs.argStr[2] == ' '))
-			parametrs.argValue = parametrs.argStr.substr(3);
-		else if (parametrs.argStr.length() > LenghtTwoChar)
-			parametrs.argValue = parametrs.argStr.substr(LenghtTwoChar);
+		p_param.argName = p_param.argStr.substr(LenghtOneChar, LenghtOneChar);
+		if (p_param.argStr.length() > LenghtTwoChar && (p_param.argStr[2] == '=' || p_param.argStr[2] == ' '))
+			p_param.argValue = p_param.argStr.substr(3);
+		else if (p_param.argStr.length() > LenghtTwoChar)
+			p_param.argValue = p_param.argStr.substr(LenghtTwoChar);
 	}
 
-	void ArgsParser::ProcessArgument(BaseParametrs parametrs, int& i) const
+	void ArgsParser::ProcessArgument(BaseParametrs& p_param, int& i) const
 	{
 		try {
-			Argument* arg = FindArgument(parametrs.argName);
+			Argument* arg = FindArgument(p_param.argName);
 			//ссылка может быть null
 			if (arg != nullptr) {
 				arg->SetIsDefined(true);
 				//аргумент может не содержать параметр
 				if (arg->HasValue()) {
 					const Validator* validator = arg->GetValidator();
-					ValidationValue(validator, parametrs, arg, i);
+					ValidationValue(validator, p_param, arg, i);
 				}
 			}
 			else {
-				std::cerr << "Unknown argument: " << parametrs.argStr << std::endl;
+				std::cerr << "Unknown argument: " << p_param.argStr << std::endl;
 			}
 		}
 		catch (const std::invalid_argument& e) {
