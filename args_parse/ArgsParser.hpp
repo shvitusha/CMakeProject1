@@ -57,14 +57,14 @@ namespace args_parse {
 		void ValidationValue(const Validator* validator, BaseParametrs& p_param, Argument* arg, int& i) const;
 
 		/// @brief Метод для поиска длинного имени, если оно есть
-		[[nodiscard]] Argument* FindLongNameArg(std::string item) const;
+		[[nodiscard]] Argument* FindLongNameArg(const std::string& item) const;
 
 		/// @brief Метод поиска короткого имени, если оно есть
-		[[nodiscard]] Argument* FindShortNameArg(std::string item) const;
+		[[nodiscard]] Argument* FindShortNameArg(const std::string& item) const;
 
 		/// @brief Метод, который проверяет является ли строка оператором.
 		/// Возвращает какой оператор был использован
-		[[nodiscard]] OperatorType IsOperator(std::string operatString);
+		[[nodiscard]] OperatorType IsOperator(std::string& operatString);
 
 	private:
 		/// Сколько всего аргументов.

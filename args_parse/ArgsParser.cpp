@@ -48,7 +48,7 @@ namespace args_parse {
 		std::cout << "and a parameter with an [parameter]/[=parametr]/[ parametr].\n" << std::endl;
 	}
 
-	OperatorType ArgsParser::IsOperator(std::string operatString)
+	OperatorType ArgsParser::IsOperator(std::string& operatString)
 	{
 		size_t position = operatString.find("--");
 		if (position != std::string::npos && position == StartingPosition)
@@ -64,7 +64,7 @@ namespace args_parse {
 		return OperatorType::Nope;
 	}
 
-	Argument* ArgsParser::FindLongNameArg(std::string item) const
+	Argument* ArgsParser::FindLongNameArg(const std::string& item) const
 	{
 		Argument* foundArg = nullptr;
 		int matchingCount = 0;
@@ -89,7 +89,7 @@ namespace args_parse {
 		return foundArg;
 	}
 
-	Argument* ArgsParser::FindShortNameArg(std::string item) const
+	Argument* ArgsParser::FindShortNameArg(const std::string& item) const
 	{
 		for (const auto& arg : _args)
 		{
