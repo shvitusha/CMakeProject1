@@ -8,8 +8,10 @@
 #include <iostream>
 #include <memory>
 
-static std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> getTestParser(int argc, const char** argv) {
-	std::vector<std::unique_ptr<args_parse::Argument>> vector;
+using VectorPtrArg = std::vector<std::unique_ptr<args_parse::Argument>>;
+
+static std::pair<args_parse::ArgsParser, VectorPtrArg> getTestParser(int argc, const char** argv) {
+	VectorPtrArg vector;
 	args_parse::ArgsParser parser(argc, argv);
 	args_parse::BoolArg help('h', "help");
 	args_parse::BoolArg verbose('v', "verbose");
@@ -31,7 +33,7 @@ static std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse:
 TEST_CASE("Parse value", "[ArgsParser]") {
 	const char* argv[] = { "program", "-v", "--output=file.txt", "-n10", "--number=27" };
 	int argc = sizeof(argv) / sizeof(const char*);
-	std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(argc, argv);
+	std::pair<args_parse::ArgsParser, VectorPtrArg> pair = getTestParser(argc, argv);
 	args_parse::ArgsParser parser = pair.first;
 
 	SECTION("Parsing valid arguments") {
@@ -41,7 +43,7 @@ TEST_CASE("Parse value", "[ArgsParser]") {
 	SECTION("Parsing invalid arguments") {
 		const char* invalidArgv[] = { "program", "-x", "--input" };
 		int invalidArgc = sizeof(invalidArgv) / sizeof(const char*);
-		std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(invalidArgc, invalidArgv);
+		std::pair<args_parse::ArgsParser, VectorPtrArg> pair = getTestParser(invalidArgc, invalidArgv);
 		args_parse::ArgsParser invalidParser = pair.first;
 
 		REQUIRE_THROWS_AS(invalidParser.Parse(), std::invalid_argument);
@@ -87,7 +89,7 @@ TEST_CASE("String ValidValue", "[StringValidator]") {
 TEST_CASE("FindArgument", "[ArgsParser]") {
 	const char* argv[] = { "program", "-h", "--output=file.txt", "-n25", "--number=2", "--string", "--output-path=path" };
 	int argc = sizeof(argv) / sizeof(const char*);
-	std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(argc, argv);
+	std::pair<args_parse::ArgsParser, VectorPtrArg> pair = getTestParser(argc, argv);
 	args_parse::ArgsParser parser = pair.first;
 
 	SECTION("Finding existing arguments") {
