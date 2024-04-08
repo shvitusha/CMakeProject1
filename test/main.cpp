@@ -8,32 +8,6 @@
 #include <iostream>
 #include <memory>
 
-//static std::vector<args_parse::Argument*> getTestList() {
-//	std::vector<args_parse::Argument*> args;
-//	args_parse::BoolArg* help = new args_parse::BoolArg('h', "help");
-//	args_parse::BoolArg* verbose = new args_parse::BoolArg('v', "verbose");
-//	args_parse::StringArg* input = new args_parse::StringArg('i', "input");
-//	args_parse::StringArg* output = new args_parse::StringArg('o', "output");
-//	args_parse::IntArg* number = new args_parse::IntArg('n', "number");
-//
-//	args.push_back(help);
-//	args.push_back(verbose);
-//	args.push_back(input);
-//	args.push_back(output);
-//	args.push_back(number);
-//
-//	return args;
-//}
-//
-//static args_parse::ArgsParser getTestParser(int argc, const char** argv) {
-//	args_parse::ArgsParser parser(argc, argv);
-//	std::vector<args_parse::Argument*> args = getTestList();
-//	for (auto& arg : args) {
-//		parser.Add(arg);
-//	}
-//	return parser;
-//}
-
 static std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> getTestParser(int argc, const char** argv) {
 	std::vector<std::unique_ptr<args_parse::Argument>> vector;
 	args_parse::ArgsParser parser(argc, argv);
@@ -51,10 +25,6 @@ static std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse:
 	{
 		parser.Add(arg.get());
 	}
-	/*parser.Add(std::make_unique<args_parse::BoolArg>(help));
-	parser.Add(&verbose);
-	parser.Add(&output);
-	parser.Add(&number);*/
 	return { parser, move(vector) };
 }
 
@@ -125,9 +95,9 @@ TEST_CASE("FindArgument", "[ArgsParser]") {
 		REQUIRE(parser.FindArgument("output") != nullptr);
 	}
 
-	args_parse::StringArg longArg("", "string");
+	args_parse::StringArg longArg('\0', "string");
 	parser.Add(&longArg);
-	args_parse::StringArg nonUnique("", "output-path");
+	args_parse::StringArg nonUnique('\0', "output-path");
 
 	SECTION("Non-unique argument addition") {
 		REQUIRE_THROWS_AS(parser.Add(&nonUnique), std::invalid_argument);

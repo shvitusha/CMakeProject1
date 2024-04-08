@@ -16,11 +16,11 @@ namespace args_parse {
 		Argument();
 
 		/// @brief проверка может ли быть у аргумента значение
-		bool HasValue() const { return _isValue; }
+		[[nodiscard]] bool HasValue() const { return _isValue; }
 
 		///@brief возвращает указатель на объект Validator, используемый для проверки данных.
 		///при отсутствии валидатора возвращается nullptr.
-		virtual const Validator* GetValidator() const { return nullptr; }
+		[[nodiscard]] virtual const Validator* GetValidator() const { return nullptr; }
 
 		/// @brief конструктор
 		virtual ~Argument() {}

@@ -27,11 +27,11 @@ namespace args_parse {
 
 		/// @brief Метод парсинга аргументов командной строки.
 		/// Он проходит по каждому аргументу командной строки и проверяет, был ли найден аргумент в векторе
-		bool Parse();
+		[[nodiscard]] bool Parse();
 
 		/// @brief Метод поиска аргумента.
 		/// В зависимости от оператора вызывает методы поиска короткого или длинного имени.
-		Argument* FindArgument(const std::string& argName) const;
+		[[nodiscard]] Argument* FindArgument(const std::string& argName) const;
 
 		/// @brief Метод для вывода справки об использовании программы.
 		/// Выводит описание всех добавленных аргументов командной строки
@@ -57,14 +57,14 @@ namespace args_parse {
 		void ValidationValue(const Validator* validator, BaseParametrs& p_param, Argument* arg, int& i) const;
 
 		/// @brief Метод для поиска длинного имени, если оно есть
-		Argument* FindLongNameArg(std::string item) const;
+		[[nodiscard]] Argument* FindLongNameArg(std::string item) const;
 
 		/// @brief Метод поиска короткого имени, если оно есть
-		Argument* FindShortNameArg(std::string item) const;
+		[[nodiscard]] Argument* FindShortNameArg(std::string item) const;
 
 		/// @brief Метод, который проверяет является ли строка оператором.
 		/// Возвращает какой оператор был использован
-		OperatorType IsOperator(std::string operatString);
+		[[nodiscard]] OperatorType IsOperator(std::string operatString);
 
 	private:
 		/// Сколько всего аргументов.

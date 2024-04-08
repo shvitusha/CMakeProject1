@@ -12,13 +12,6 @@ namespace args_parse {
 	class IntValidator : public Validator {
 	public:
 		bool ValidValue(const std::string& value) const override {
-			/*try {
-				std::stoi(value);
-				return true;
-			}
-			catch (const std::exception&) {
-				return false;
-			}*/
 			if (value.empty()) {
 				return false;
 			}
