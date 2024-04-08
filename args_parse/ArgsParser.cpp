@@ -12,10 +12,6 @@ namespace args_parse {
 
 	ArgsParser::ArgsParser(int argc, const char** argv) : _argc(argc), _argv(argv) {}
 
-	ArgsParser::~ArgsParser() {
-		_args.clear();
-	}
-
 	void ArgsParser::Add(Argument* arg) {
 		// Такое имя аргумента может уже существовать
 		for (const auto& existingArg : _args) {

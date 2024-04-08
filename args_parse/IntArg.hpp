@@ -12,12 +12,6 @@ namespace args_parse {
 		/// конструктор для случая, когда нет короткого имени
 		IntArg(const char* longName);
 
-		///наследование конструктора базового класса
-		using Argument::Argument;
-
-		/// проверка соответствия переданного аргумента имени
-		bool Matches(const std::string& arg) override;
-
 		///получение числового значени¤ аргумента
 		int getValue();
 

@@ -5,14 +5,6 @@ namespace args_parse {
 
 	StringArg::StringArg(const char* longName) : Argument(longName, true) {}
 
-	bool StringArg::Matches(const std::string& arg) {
-		if (arg == std::string(1, _shortName) || arg == _longName) {
-			//_isDefined = true;
-			return true;
-		}
-		return false;
-	}
-
 	std::string StringArg::GetValue() { return _value; }
 
 	void StringArg::SetValue( std::string& value)

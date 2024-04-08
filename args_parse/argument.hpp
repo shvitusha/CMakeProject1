@@ -25,11 +25,6 @@ namespace args_parse {
 		/// @brief конструктор
 		virtual ~Argument() {}
 
-		/// @brief функция для проверки соответствия аргумента командной строки.
-		/// аргумент передается в качестве параметра.
-		/// возвращает булевое значение
-		virtual bool Matches(const std::string& arg) { return false; }
-
 		/// @brief get() для получения значени¤ поля, соответстующего в классе
 		std::string GetLongName() const;
 
@@ -55,9 +50,7 @@ namespace args_parse {
 		bool GetIsDefined() const { return _isDefined; }
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
-		virtual void SetValue(std::string& value) {
-			value = std::string();
-		}
+		virtual void SetValue(std::string& value) {}
 
 	protected:
 		///короткое описание аргумента

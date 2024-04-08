@@ -5,9 +5,9 @@ namespace args_parse {
 		_shortName(shortName), _longName(longName), _isValue(isValue), _description(""), _isDefined(false) {}
 
 	Argument::Argument(const char* longName, bool isValue) : 
-		_shortName('\0'), _longName(longName), _isValue(isValue), _description(""), _isDefined(false) {}
+		Argument('\0',longName, isValue){}
 
-	Argument::Argument() : _shortName('\0'), _isValue(false), _description(""), _isDefined(false) {}
+	Argument::Argument() : Argument('\0', "", false) {}
 
 	std::string Argument::GetLongName() const { return _longName; }
 

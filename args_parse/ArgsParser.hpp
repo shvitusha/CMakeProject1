@@ -29,6 +29,19 @@ namespace args_parse {
 		/// Он проходит по каждому аргументу командной строки и проверяет, был ли найден аргумент в векторе
 		bool Parse();
 
+		/// @brief Метод поиска аргумента.
+		/// В зависимости от оператора вызывает методы поиска короткого или длинного имени.
+		Argument* FindArgument(const std::string& argName) const;
+
+		/// @brief Метод для вывода справки об использовании программы.
+		/// Выводит описание всех добавленных аргументов командной строки
+		void ShowHelp() const;
+
+		/// @brief Метод для вывода дополнительной справки об использовании программы.
+		/// Выводит описание всех добавленных аргументов, принимающих параметр, и как использовать.
+		void ShowHelpVerbose() const;
+
+	private:
 		/// @brief Метод для разбора длинных аргументов командной строки.
 		/// Извлекает имя и значение аргумента для дальнейшей обработки.
 		void ParseLongArgument(BaseParametrs& p_param);
@@ -42,21 +55,6 @@ namespace args_parse {
 		void ProcessArgument(BaseParametrs& p_param, int& i) const;
 
 		void ValidationValue(const Validator* validator, BaseParametrs& p_param, Argument* arg, int& i) const;
-
-		/// @brief Метод поиска аргумента.
-		/// В зависимости от оператора вызывает методы поиска короткого или длинного имени.
-		Argument* FindArgument(const std::string& argName) const;
-
-		/// @brief Деструктор
-		~ArgsParser();
-
-		/// @brief Метод для вывода справки об использовании программы.
-		/// Выводит описание всех добавленных аргументов командной строки
-		void ShowHelp() const;
-
-		/// @brief Метод для вывода дополнительной справки об использовании программы.
-		/// Выводит описание всех добавленных аргументов, принимающих параметр, и как использовать.
-		void ShowHelpVerbose() const;
 
 		/// @brief Метод для поиска длинного имени, если оно есть
 		Argument* FindLongNameArg(std::string item) const;

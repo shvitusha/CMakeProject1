@@ -8,14 +8,6 @@ namespace args_parse {
 
 	IntArg::IntArg(const char* longName) : Argument(longName, true) {}
 
-	bool IntArg::Matches(const string& arg) {
-		if (arg == string(1, _shortName) || arg == _longName) {
-			_isDefined = true;
-			return true;
-		}
-		return false;
-	}
-
 	int IntArg::getValue() { return _value; }
 
 	void IntArg::SetValue(std::string& value)
