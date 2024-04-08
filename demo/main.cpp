@@ -1,21 +1,19 @@
-#include <args_parse/BoolArg.hpp>
-#include <args_parse/StringArg.hpp>
-#include <args_parse/IntArg.hpp>
+#include <args_parse/argument.hpp>
 #include <args_parse/ArgsParser.hpp>
 
 int main(int argc, const char** argv)
 {
 	args_parse::ArgsParser parser(argc, argv);
 
-	args_parse::BoolArg help('h', "help");
+	args_parse::BoolArg help('h', "help", false);
 	help.SetDescription("Outputs a description of all added command line arguments");
-	args_parse::BoolArg verbose('v', "verbose");
+	args_parse::BoolArg verbose('v', "verbose", false);
 	verbose.SetDescription("Outputs a verbose of all added command line arguments");
-	args_parse::StringArg input('i', "input");
+	args_parse::StringArg input('i', "input", true);
 	input.SetDescription("Input (filename)");
-	args_parse::StringArg output('o', "output");
+	args_parse::StringArg output('o', "output", true);
 	output.SetDescription("Output (filename)");
-	args_parse::IntArg number('n', "number");
+	args_parse::IntArg number('n', "number", true);
 	number.SetDescription("Assigns a numeric value to an argument");
 
 	parser.Add(&help);

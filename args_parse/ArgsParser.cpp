@@ -1,5 +1,4 @@
 #include "ArgsParser.hpp"
-#include "Validator.hpp"
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -11,10 +10,6 @@ namespace args_parse {
 	const int LenghtTwoChar = 2;
 
 	ArgsParser::ArgsParser(int argc, const char** argv) : _argc(argc), _argv(argv) {}
-
-	ArgsParser::~ArgsParser() {
-		_args.clear();
-	}
 
 	void ArgsParser::Add(Argument* arg) {
 		// Такое имя аргумента может уже существовать
@@ -51,7 +46,7 @@ namespace args_parse {
 		std::cout << "To assign a value to an argument, enter a[-short] or [--long] name" << std::endl;
 		std::cout << "and a parameter with an [parameter]/[=parametr]/[ parametr].\n" << std::endl;
 	}
-
+	//& string_view
 	OperatorType ArgsParser::IsOperator(std::string operatString)
 	{
 		size_t position = operatString.find("--");

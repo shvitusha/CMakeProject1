@@ -1,8 +1,6 @@
 #include <catch2/catch_all.hpp>
 
-#include <args_parse/BoolArg.hpp>
-#include <args_parse/StringArg.hpp>
-#include <args_parse/IntArg.hpp>
+#include <args_parse/argument.hpp>
 #include <args_parse/ArgsParser.hpp>
 
 #include <iostream>
@@ -37,10 +35,10 @@
 static std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> getTestParser(int argc, const char** argv) {
 	std::vector<std::unique_ptr<args_parse::Argument>> vector;
 	args_parse::ArgsParser parser(argc, argv);
-	args_parse::BoolArg help('h', "help");
-	args_parse::BoolArg verbose('v', "verbose");
-	args_parse::StringArg output('o', "output");
-	args_parse::IntArg number('n', "number");
+	args_parse::BoolArg help('h', "help", false);
+	args_parse::BoolArg verbose('v', "verbose", false);
+	args_parse::StringArg output('o', "output", true);
+	args_parse::IntArg number('n', "number", true);
 
 	vector.push_back(std::make_unique<args_parse::BoolArg>(help));
 	vector.push_back(std::make_unique<args_parse::BoolArg>(verbose));
@@ -60,7 +58,7 @@ static std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse:
 
 TEST_CASE("Parse value", "[ArgsParser]") {
 	const char* argv[] = { "program", "-v", "--output=file.txt", "-n10", "--number=27" };
-	int argc = sizeof(argv) / sizeof(const char*);
+	int argc = 5;
 	std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(argc, argv);
 	args_parse::ArgsParser parser = pair.first;
 
@@ -70,14 +68,14 @@ TEST_CASE("Parse value", "[ArgsParser]") {
 
 	SECTION("Parsing invalid arguments") {
 		const char* invalidArgv[] = { "program", "-x", "--input" };
-		int invalidArgc = sizeof(invalidArgv) / sizeof(const char*);
+		int invalidArgc = 3;
 		std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(invalidArgc, invalidArgv);
 		args_parse::ArgsParser invalidParser = pair.first;
 
 		REQUIRE_THROWS_AS(invalidParser.Parse(), std::invalid_argument);
 	}
 
-	args_parse::BoolArg newArg('t', "test");
+	args_parse::BoolArg newArg('t', "test", false);
 	parser.Add(&newArg);
 
 	SECTION("Find new added argument") {
@@ -116,7 +114,7 @@ TEST_CASE("String ValidValue", "[StringValidator]") {
 
 TEST_CASE("FindArgument", "[ArgsParser]") {
 	const char* argv[] = { "program", "-h", "--output=file.txt", "-n25", "--number=2", "--string", "--output-path=path" };
-	int argc = sizeof(argv) / sizeof(const char*);
+	int argc = 7;
 	std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(argc, argv);
 	args_parse::ArgsParser parser = pair.first;
 

@@ -1,6 +1,7 @@
 #pragma once
-#include "Validator.hpp"
+#include "ArgsParser.hpp"
 #include <iostream>
+#include <string>
 
 namespace args_parse {
 	class Argument {
@@ -25,18 +26,13 @@ namespace args_parse {
 		/// @brief конструктор
 		virtual ~Argument() {}
 
-		/// @brief функция для проверки соответствия аргумента командной строки.
-		/// аргумент передается в качестве параметра.
-		/// возвращает булевое значение
-		virtual bool Matches(const std::string& arg) { return false; }
-
 		/// @brief get() для получения значени¤ поля, соответстующего в классе
 		std::string GetLongName() const;
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
 		void SetLongName(const char* longName);
 
-		/// @brief get() дл¤ получения значения поля, соответстующего в классе
+		/// @brief get() для получения значения поля, соответстующего в классе
 		char GetShortName() const;
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
@@ -56,7 +52,6 @@ namespace args_parse {
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
 		virtual void SetValue(std::string& value) {
-			value = std::string();
 		}
 
 	protected:
@@ -71,4 +66,66 @@ namespace args_parse {
 		///флаг на определение аргумента
 		bool _isDefined;
 	};
+
+#pragma region StringArg
+	class StringArg : public Argument {
+		public:
+			///наследование конструктора базового класса
+			using Argument::Argument;
+			
+			///получение строкового значения аргумента
+			std::string GetValue();
+
+			///присваивание строкового значения аргументу
+			void SetValue(std::string& value) override;
+
+			/// @brief метод для получения указателя на объект валидатора, связанного с аргументом.
+			///если для данного аргумента не определен валидатор, метод возвращает nullptr.
+			const Validator* GetValidator() const override;
+
+		private:
+			std::string _value;
+		};
+#pragma endregion
+
+#pragma region IntArg
+
+	class IntArg : public Argument {
+	public:
+		///наследование конструктора базового класса
+		using Argument::Argument;
+
+		///получение числового значени¤ аргумента
+		int getValue();
+
+		///присваивание числового значения аргументу
+		///value после валидации
+		void SetValue(std::string& value) override;
+
+		/// @brief метод для получения указателя на объект валидатора, связанного с аргументом.
+		///если для данного аргумента не определен валидатор, метод возвращает nullptr.
+		const Validator* GetValidator() const override;
+
+	private:
+		/// Значение аргумента
+		int _value;
+	};
+
+#pragma endregion
+
+#pragma region BoolArg
+	class BoolArg : public Argument {
+		public:
+			///наследование конструктора базового класса
+			using Argument::Argument;
+
+			const Validator* GetValidator() const { return nullptr; }
+
+			///Присваивание булевого значения аргументу
+			void SetValue(std::string& value) override { _value = value; };
+
+		private:
+			std::string _value;
+	};
+#pragma endregion
 }
