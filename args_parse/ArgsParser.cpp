@@ -1,4 +1,5 @@
 #include "ArgsParser.hpp"
+#include "Validator.hpp"
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -46,8 +47,8 @@ namespace args_parse {
 		std::cout << "To assign a value to an argument, enter a[-short] or [--long] name" << std::endl;
 		std::cout << "and a parameter with an [parameter]/[=parametr]/[ parametr].\n" << std::endl;
 	}
-	//& string_view
-	OperatorType ArgsParser::IsOperator(std::string operatString)
+
+	OperatorType ArgsParser::IsOperator(std::string& operatString)
 	{
 		size_t position = operatString.find("--");
 		if (position != std::string::npos && position == StartingPosition)
@@ -63,7 +64,7 @@ namespace args_parse {
 		return OperatorType::Nope;
 	}
 
-	Argument* ArgsParser::FindLongNameArg(std::string item) const
+	Argument* ArgsParser::FindLongNameArg(const std::string& item) const
 	{
 		Argument* foundArg = nullptr;
 		int matchingCount = 0;
@@ -88,7 +89,7 @@ namespace args_parse {
 		return foundArg;
 	}
 
-	Argument* ArgsParser::FindShortNameArg(std::string item) const
+	Argument* ArgsParser::FindShortNameArg(const std::string& item) const
 	{
 		for (const auto& arg : _args)
 		{
@@ -165,11 +166,13 @@ namespace args_parse {
 			arg->SetIsDefined(true);
 			//аргумент может не содержать параметр
 			if (arg->HasValue()) {
+				//значение может быть пустым
 				if (p_param.argValue.empty()) {
 					std::string errorMessage = "Missing value for argument: " + p_param.argName;
 					std::cerr << errorMessage << std::endl;
 					return;
 				}
+
 				const Validator* validator = arg->GetValidator();
 				ValidationValue(validator, p_param, arg, i);
 			}
