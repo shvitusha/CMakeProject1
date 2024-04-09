@@ -1,9 +1,9 @@
 #pragma once
 #include "ArgsParser.hpp"
-#include <iostream>
 #include <string>
 
 namespace args_parse {
+	class Validator;
 	class Argument {
 	public:
 		/// @brief конструктор класса

@@ -1,5 +1,6 @@
 #include <args_parse/argument.hpp>
 #include <args_parse/ArgsParser.hpp>
+#include <iostream>
 
 int main(int argc, const char** argv)
 {

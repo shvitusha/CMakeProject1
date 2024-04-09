@@ -5,6 +5,7 @@
 #include <string>
 
 namespace args_parse {
+	class Argument;
 	/// @brief Перечисление типов оператора (длинный, короткий, неопределенный)
 	enum class OperatorType {
 		Long,

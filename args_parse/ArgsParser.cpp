@@ -159,24 +159,23 @@ namespace args_parse {
 
 	void ArgsParser::ProcessArgument(BaseParametrs& p_param, int& i) const
 	{
-		try {
-			Argument* arg = FindArgument(p_param.argName);
-			//ссылка может быть null
-			if (arg != nullptr) {
-				arg->SetIsDefined(true);
-				//аргумент может не содержать параметр
-				if (arg->HasValue()) {
-					const Validator* validator = arg->GetValidator();
-					ValidationValue(validator, p_param, arg, i);
+		Argument* arg = FindArgument(p_param.argName);
+		//ссылка может быть null
+		if (arg != nullptr) {
+			arg->SetIsDefined(true);
+			//аргумент может не содержать параметр
+			if (arg->HasValue()) {
+				if (p_param.argValue.empty()) {
+					std::string errorMessage = "Missing value for argument: " + p_param.argName;
+					std::cerr << errorMessage << std::endl;
+					return;
 				}
-			}
-			else {
-				std::cerr << "Unknown argument: " << p_param.argStr << std::endl;
+				const Validator* validator = arg->GetValidator();
+				ValidationValue(validator, p_param, arg, i);
 			}
 		}
-		catch (const std::invalid_argument& e) {
-			std::string errorMessage = e.what();
-			throw std::invalid_argument(errorMessage);
+		else {
+			std::cerr << "Unknown argument: " << p_param.argStr << std::endl;
 		}
 	}
 
