@@ -1,11 +1,12 @@
-# В современном CMake рекомендуется сразу задавать нужную версию CMake.
+# РІ СЃРѕРІСЂРµРјРµРЅРЅРѕРј CMake СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃВ¤ СЃСЂР°Р·Сѓ Р·Р°РґР°РІР°С‚СЊ РЅСѓР¶РЅСѓСЋ РІРµСЂСЃРёСЋ CMake.
 cmake_minimum_required(VERSION 3.27)
 
-# Говорим CMake что за проект.
+# РіРѕРІРѕСЂРёРј CMake С‡С‚Рѕ Р·Р° РїСЂРѕРµРєС‚.
 project(args_parse_lib LANGUAGES CXX)
 
-# Определяем библиотеку и указываем из чего она состоит.
-add_library(args_parse STATIC Validator.hpp argument.cpp argument.hpp ArgsParser.cpp ArgsParser.hpp IntArg.cpp IntArg.hpp BoolArg.cpp BoolArg.hpp StringArg.cpp StringArg.hpp)
+# РѕРїСЂРµРґРµР»СЏРµРј Р±РёР±Р»РёРѕС‚РµРєСѓ Рё СѓРєР°Р·С‹РІР°РµРј РёР· С‡РµРіРѕ РѕРЅР° СЃРѕСЃС‚РѕРёС‚.
+add_library(args_parse STATIC ForwardDeclaration.hpp argument.cpp argument.hpp ArgsParser.cpp ArgsParser.hpp)
+add_compile_options(/utf-8)
 
 target_include_directories(args_parse PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 

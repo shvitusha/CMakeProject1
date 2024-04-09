@@ -1,35 +1,43 @@
-#include <args_parse/BoolArg.hpp>
-#include <args_parse/StringArg.hpp>
-#include <args_parse/IntArg.hpp>
+#include <args_parse/argument.hpp>
 #include <args_parse/ArgsParser.hpp>
+#include <iostream>
 
 int main(int argc, const char** argv)
 {
 	args_parse::ArgsParser parser(argc, argv);
 
-	std::unique_ptr<args_parse::Argument> help(new args_parse::BoolArg('h', "help"));
-	help->SetDescription("Outputs a description of all added command line arguments");
-	std::unique_ptr<args_parse::Argument> verbose(new args_parse::BoolArg('v', "verbose"));
-	verbose->SetDescription("Assigns a boolean value to the argument");
-	std::unique_ptr<args_parse::Argument> input(new args_parse::StringArg('i', "input"));
-	input->SetDescription("Input");
-	std::unique_ptr<args_parse::Argument> output(new args_parse::StringArg('o', "output"));
-	output->SetDescription("Output");
-	std::unique_ptr<args_parse::Argument> number(new args_parse::IntArg('n', "number"));
-	number->SetDescription("Assigns a numeric value to an argument");
+	args_parse::BoolArg help('h', "help", false);
+	help.SetDescription("Outputs a description of all added command line arguments");
+	args_parse::BoolArg verbose('v', "verbose", false);
+	verbose.SetDescription("Outputs a verbose of all added command line arguments");
+	args_parse::StringArg input('i', "input", true);
+	input.SetDescription("Input (filename)");
+	args_parse::StringArg output('o', "output", true);
+	output.SetDescription("Output (filename)");
+	args_parse::IntArg number('n', "number", true);
+	number.SetDescription("Assigns a numeric value to an argument");
 
-	parser.Add(std::move(help));
-	parser.Add(std::move(verbose));
-	parser.Add(std::move(input));
-	parser.Add(std::move(output));
-	parser.Add(std::move(number));
-
-	parser.ShowHelp();
+	parser.Add(&help);
+	parser.Add(&verbose);
+	parser.Add(&input);
+	parser.Add(&output);
+	parser.Add(&number);
 
 	if (parser.Parse()) {
-		if (help && help->HasValue()) {
+		if (help.GetIsDefined()) {
 			parser.ShowHelp();
-			return 0;
+		}
+		if (verbose.GetIsDefined()) {
+			parser.ShowHelpVerbose();
+		}
+		if (output.GetIsDefined()) {
+			std::cout << "Output o value: " << output.GetValue() << std::endl;
+		}
+		if (number.GetIsDefined()) {
+			std::cout << "Input n value: " << number.getValue() << std::endl;
+		}
+		if (input.GetIsDefined()) {
+			std::cout << "Input i value: " << input.GetValue() << std::endl;
 		}
 	}
 	return 0;

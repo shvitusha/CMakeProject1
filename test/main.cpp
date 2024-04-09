@@ -1,131 +1,139 @@
 #include <catch2/catch_all.hpp>
 
-#include <args_parse/BoolArg.hpp>
-#include <args_parse/StringArg.hpp>
-#include <args_parse/IntArg.hpp>
+#include <args_parse/argument.hpp>
 #include <args_parse/ArgsParser.hpp>
 
 #include <iostream>
 #include <memory>
 
-//std::vector<std::unique_ptr<args_parse::Argument>> getTestList();
+//static std::vector<args_parse::Argument*> getTestList() {
+//	std::vector<args_parse::Argument*> args;
+//	args_parse::BoolArg* help = new args_parse::BoolArg('h', "help");
+//	args_parse::BoolArg* verbose = new args_parse::BoolArg('v', "verbose");
+//	args_parse::StringArg* input = new args_parse::StringArg('i', "input");
+//	args_parse::StringArg* output = new args_parse::StringArg('o', "output");
+//	args_parse::IntArg* number = new args_parse::IntArg('n', "number");
+//
+//	args.push_back(help);
+//	args.push_back(verbose);
+//	args.push_back(input);
+//	args.push_back(output);
+//	args.push_back(number);
+//
+//	return args;
+//}
+//
+//static args_parse::ArgsParser getTestParser(int argc, const char** argv) {
+//	args_parse::ArgsParser parser(argc, argv);
+//	std::vector<args_parse::Argument*> args = getTestList();
+//	for (auto& arg : args) {
+//		parser.Add(arg);
+//	}
+//	return parser;
+//}
 
-std::vector<std::unique_ptr<args_parse::Argument>> getTestList() {
-	std::vector<std::unique_ptr<args_parse::Argument>> args;
-
-	args.emplace_back(std::make_unique<args_parse::BoolArg>('h', "help"));
-	args.emplace_back(std::make_unique<args_parse::BoolArg>('v', "verbose"));
-	args.emplace_back(std::make_unique<args_parse::StringArg>('i', "input"));
-	args.emplace_back(std::make_unique<args_parse::StringArg>('o', "output"));
-	args.emplace_back(std::make_unique<args_parse::IntArg>('n', "number"));
-
-	return args;
-}
-
-args_parse::ArgsParser getTestParser(int argc, const char** argv) {
+static std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> getTestParser(int argc, const char** argv) {
+	std::vector<std::unique_ptr<args_parse::Argument>> vector;
 	args_parse::ArgsParser parser(argc, argv);
-	std::vector<std::unique_ptr<args_parse::Argument>> args = getTestList();
-	for (auto& arg : args) {
-		parser.Add(std::move(arg));
+	args_parse::BoolArg help('h', "help", false);
+	args_parse::BoolArg verbose('v', "verbose", false);
+	args_parse::StringArg output('o', "output", true);
+	args_parse::IntArg number('n', "number", true);
+
+	vector.push_back(std::make_unique<args_parse::BoolArg>(help));
+	vector.push_back(std::make_unique<args_parse::BoolArg>(verbose));
+	vector.push_back(std::make_unique<args_parse::StringArg>(output));
+	vector.push_back(std::make_unique<args_parse::IntArg>(number));
+
+	for (auto& arg : vector)
+	{
+		parser.Add(arg.get());
 	}
-	return parser;
+	/*parser.Add(std::make_unique<args_parse::BoolArg>(help));
+	parser.Add(&verbose);
+	parser.Add(&output);
+	parser.Add(&number);*/
+	return { parser, move(vector) };
 }
 
-TEST_CASE("Positive test", "[dummy]")
-{
-	const char* argv[] = { "test","-h -v" };
-	int argc = 3;
-	args_parse::ArgsParser parser = getTestParser(argc, argv);
+TEST_CASE("Parse value", "[ArgsParser]") {
+	const char* argv[] = { "program", "-v", "--output=file.txt", "-n10", "--number=27" };
+	int argc = 5;
+	std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(argc, argv);
+	args_parse::ArgsParser parser = pair.first;
 
-	REQUIRE(parser.Parse());
-}
-
-TEST_CASE("Section example", "[dummy][section]")
-{
-	int a = 0;
-	int b = 1;
-	std::cout << "before all sections: " << a << ", " << b << std::endl;
-
-	SECTION("The first section") {
-		REQUIRE(a != b);
-
-		a = 10;
-		b = a;
-		std::cout << "inside the first section: " << a << ", " << b << std::endl;
-
-		REQUIRE(a == b);
+	SECTION("Parsing valid arguments") {
+		REQUIRE(parser.Parse() == true);
 	}
 
-	SECTION("The second section") {
-		REQUIRE(a != b);
+	SECTION("Parsing invalid arguments") {
+		const char* invalidArgv[] = { "program", "-x", "--input" };
+		int invalidArgc = 3;
+		std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(invalidArgc, invalidArgv);
+		args_parse::ArgsParser invalidParser = pair.first;
 
-		b = 0;
-		std::cout << "inside the second section: " << a << ", " << b << std::endl;
+		REQUIRE_THROWS_AS(invalidParser.Parse(), std::invalid_argument);
+	}
 
-		REQUIRE(a == b);
+	args_parse::BoolArg newArg('t', "test", false);
+	parser.Add(&newArg);
 
-		SECTION("A nested section #1") {
-			std::cout << "on enter into nested #1: " << a << ", " << b << std::endl;
-
-			a = 3;
-			b = 4;
-
-			REQUIRE(a != b);
-		}
-
-		SECTION("A nested section #2") {
-			std::cout << "on enter into nested #2: " << a << ", " << b << std::endl;
-
-			a = 5;
-			b = 6;
-
-			REQUIRE(a != b);
-		}
-
-		SECTION("A nested section #3") {
-			std::cout << "on enter into nested #3: " << a << ", " << b << std::endl;
-
-			a = 7;
-			b = 8;
-
-			REQUIRE(a != b);
-		}
+	SECTION("Find new added argument") {
+		REQUIRE(parser.FindArgument("t") != nullptr);
+		REQUIRE(parser.FindArgument("te") != nullptr);
+		REQUIRE(parser.FindArgument("test") != nullptr);
 	}
 }
 
-TEST_CASE("Assertions for negation", "[require_false]")
-{
-	std::unique_ptr<int> d/*{ new int(10) }*/;
-	REQUIRE_FALSE(d);
+TEST_CASE("Int ValidValue", "[IntValidValue]") {
+	args_parse::IntValidator validator;
+
+	SECTION("Valid integer values") {
+		REQUIRE(validator.ValidValue("10") == true);
+		REQUIRE(validator.ValidValue("-5") == true);
+	}
+
+	SECTION("Invalid integer values") {
+		REQUIRE(validator.ValidValue("") == false);
+		REQUIRE(validator.ValidValue("abc") == false);
+	}
 }
 
-TEST_CASE("Assertions for exceptions", "[throws]")
-{
-	REQUIRE_NOTHROW([] {}());
+TEST_CASE("String ValidValue", "[StringValidator]") {
+	args_parse::StringValidator validator;
 
-	REQUIRE_THROWS(
-		[] { throw std::runtime_error{ "Dummy" }; }());
+	SECTION("Valid string values") {
+		REQUIRE(validator.ValidValue("hello") == true);
+		REQUIRE(validator.ValidValue("world") == true);
+	}
 
-	REQUIRE_THROWS_AS(
-		[] { throw std::runtime_error{ "Dummy" }; }(),
-		std::runtime_error);
-
-	REQUIRE_THROWS_WITH(
-		[] { throw std::runtime_error{ "Dummy" }; }(),
-		"Dummy");
-
-	REQUIRE_THROWS_WITH(
-		[] { throw std::runtime_error{ "Message with Dummy inside" }; }(),
-		Catch::Matchers::StartsWith("Message") &&
-		Catch::Matchers::ContainsSubstring("Dummy"));
+	SECTION("Invalid string values") {
+		REQUIRE(validator.ValidValue("") == false);
+	}
 }
 
-TEST_CASE("Assertions with matchers", "[require_that][matchers]")
-{
-	std::string value{ "This is a dummy value" };
+TEST_CASE("FindArgument", "[ArgsParser]") {
+	const char* argv[] = { "program", "-h", "--output=file.txt", "-n25", "--number=2", "--string", "--output-path=path" };
+	int argc = 7;
+	std::pair<args_parse::ArgsParser, std::vector<std::unique_ptr<args_parse::Argument>>> pair = getTestParser(argc, argv);
+	args_parse::ArgsParser parser = pair.first;
 
-	REQUIRE_THAT(value,
-		Catch::Matchers::StartsWith("This") &&
-		Catch::Matchers::ContainsSubstring("dummy") &&
-		Catch::Matchers::EndsWith("value"));
+	SECTION("Finding existing arguments") {
+		REQUIRE(parser.FindArgument("h") != nullptr);
+		REQUIRE(parser.FindArgument("output") != nullptr);
+	}
+
+	args_parse::StringArg longArg("", "string");
+	parser.Add(&longArg);
+	args_parse::StringArg nonUnique("", "output-path");
+
+	SECTION("Non-unique argument addition") {
+		REQUIRE_THROWS_AS(parser.Add(&nonUnique), std::invalid_argument);
+	}
+
+	SECTION("Finding non-existing arguments") {
+		REQUIRE_THROWS_AS(parser.FindArgument("x"), std::invalid_argument);
+		REQUIRE_THROWS_AS(parser.FindArgument("invalid"), std::invalid_argument);
+		REQUIRE_THROWS_AS(parser.FindArgument("s"), std::invalid_argument);
+	}
 }
