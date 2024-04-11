@@ -11,8 +11,7 @@ namespace args_parse {
 
 	ArgsParser::ArgsParser(int argc, const char** argv) : _argc(argc), _argv(argv) {}
 
-	template<typename T>
-	void ArgsParser::Add(Argument<T>* arg) {
+	void ArgsParser::Add(ArgumentBase* arg) {
 		// Такое имя аргумента может уже существовать
 		for (const auto& existingArg : _args) {
 			if (existingArg->GetLongName() == arg->GetLongName()) {
@@ -171,7 +170,7 @@ namespace args_parse {
 					std::cerr << errorMessage << std::endl;
 					return;
 				}
-				const Validator* validator = arg->GetValidator();
+				const SharedValidator* validator = arg->GetValidator();
 				ValidationValue(validator, p_param, arg, i);
 			}
 		}
@@ -180,7 +179,7 @@ namespace args_parse {
 		}
 	}
 
-	void ArgsParser::ValidationValue(const Validator* validator, BaseParametrs& parametrs, ArgumentBase* arg, int& i) const {
+	void ArgsParser::ValidationValue(const SharedValidator* validator, BaseParametrs& parametrs, ArgumentBase* arg, int& i) const {
 		//валидатор может быть null
 		if (validator != nullptr) {
 			std::cout << "\nString: " << parametrs.argStr << " ; Name: " << parametrs.argName << " ;" << std::endl;

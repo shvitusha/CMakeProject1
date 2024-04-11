@@ -5,14 +5,11 @@
 
  //forward declarations
 namespace args_parser {
-	class Validator;
+	class SharedValidator;
+	class ArgumentBase;
 	class Argument;
 	class ArgsParser;
-	class IntValidator;
-	class StringValidator;
-	class BoolArg;
-	class IntArg;
-	class StringArg;
+	class Validator;
 	enum class OperatorType;
 	struct BaseParametrs;
 }
