@@ -209,11 +209,11 @@ namespace args_parse {
 		ArgumentBase* arg = nullptr;
 		if (o_type == OperatorType::Long) {
 			arg = FindLongNameArg(argName);
-			return arg;
+			//return arg;
 		}
 		else if (o_type == OperatorType::Short) {
 			arg = FindShortNameArg(argName);
-			return arg;
+			//return arg;
 		}
 		return arg;
 	}

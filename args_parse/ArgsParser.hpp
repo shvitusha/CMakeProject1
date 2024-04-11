@@ -53,17 +53,17 @@ namespace args_parse {
 	private:
 		bool Additional(const T& value) const {
 			if constexpr (std::is_same_v<int, T>) {
-				if (value >= std::numeric_limits<int>::min() && value <= std::numeric_limits<int>::max())
-					return true;
+				return (value == std::floor(value)) && (value >= std::numeric_limits<int>::min() && value <= std::numeric_limits<int>::max());
 			}
+
 			else if constexpr (std::is_same_v<float, T>) {
-				if (value >= std::numeric_limits<float>::lowest() && value <= std::numeric_limits<float>::max())
-					return true;
+				return (value >= std::numeric_limits<float>::lowest() && value <= std::numeric_limits<float>::max());
 			}
+
 			else if constexpr (std::is_same_v<unsigned int, T>) {
-				if (value <= std::numeric_limits<unsigned int>::max())
-					return true;
+				return (value >= 0 && value <= std::numeric_limits<unsigned int>::max());
 			}
+
 			else if constexpr (std::is_same_v<std::string, T>) {
 				return true;
 			}

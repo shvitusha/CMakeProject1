@@ -18,9 +18,9 @@ int main(int argc, const char** argv)
 
 	args_parse::Argument<float> parametr('p', "parametr", true);
 	parametr.SetDescription("Definition of constant/precision/parameter with floating sign");
-	args_parse::Argument<unsigned int> thread_pool('t', "thread_pool", true);
+	args_parse::Argument<unsigned int> thread_pool('t', "thread-pool", true);
 	thread_pool.SetDescription("Sets the number of threads (number)");
-	args_parse::Argument<unsigned int> debug_sleep('d', "debug_sleep", true);
+	args_parse::Argument<unsigned int> debug_sleep('d', "debug-sleep", true);
 	debug_sleep.SetDescription("Defines a user input of the argument type (ms/s)");
 
 	parser.Add(&help);
