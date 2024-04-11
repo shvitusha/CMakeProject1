@@ -2,33 +2,43 @@
 #include <string>
 
 namespace args_parse {
-	Argument::Argument(char shortName, const char* longName, bool isValue) :
+	template<typename T>
+	Argument<T>::Argument(char shortName, const char* longName, bool isValue) :
 		_shortName(shortName), _longName(longName), _isValue(isValue), _description(""), _isDefined(false) {}
 
-	Argument::Argument(const char* longName, bool isValue) : 
+	template<typename T>
+	Argument<T>::Argument(const char* longName, bool isValue) :
 		_shortName('\0'), _longName(longName), _isValue(isValue), _description(""), _isDefined(false) {}
 
-	Argument::Argument() : _shortName('\0'), _isValue(false), _description(""), _isDefined(false) {}
+	template<typename T>
+	Argument<T>::Argument() : _shortName('\0'), _isValue(false), _description(""), _isDefined(false) {}
 
-	std::string Argument::GetLongName() const { return _longName; }
+	template<typename T>
+	std::string Argument<T>::GetLongName() const { return _longName; }
 
-	void Argument::SetLongName(const char* longName) { _longName = longName; }
+	template<typename T>
+	void Argument<T>::SetLongName(const char* longName) { _longName = longName; }
 
-	char Argument::GetShortName() const { return _shortName; }
+	template<typename T>
+	char Argument<T>::GetShortName() const { return _shortName; }
 
-	void Argument::SetShortName(const char shortName) { _shortName = shortName; }
+	template<typename T>
+	void Argument<T>::SetShortName(const char shortName) { _shortName = shortName; }
 
-	std::string Argument::GetDescription() const { return _description; };
+	template<typename T>
+	std::string Argument<T>::GetDescription() const { return _description; };
 
-	void Argument::SetDescription(const std::string& description) { _description = description; }
+	template<typename T>
+	void Argument<T>::SetDescription(const std::string& description) { _description = description; }
 
-	void Argument::SetIsDefined(const bool isDefined) { _isDefined = isDefined; }
+	template<typename T>
+	void Argument<T>::SetIsDefined(const bool isDefined) { _isDefined = isDefined; }
 
 
 #pragma region stringArg
 	std::string StringArg::GetValue() { return _value; }
 
-	void StringArg::SetValue(std::string& value)
+	void StringArg::SetValue(const std::string& value)
 	{
 		_value = value;
 	}
@@ -42,7 +52,7 @@ namespace args_parse {
 #pragma region intArg
 	int IntArg::getValue() { return _value; }
 
-	void IntArg::SetValue(std::string& value)
+	void IntArg::SetValue(const std::string& value)
 	{
 		_value = stoi(value);
 	}

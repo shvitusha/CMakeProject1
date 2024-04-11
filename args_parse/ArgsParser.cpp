@@ -11,7 +11,8 @@ namespace args_parse {
 
 	ArgsParser::ArgsParser(int argc, const char** argv) : _argc(argc), _argv(argv) {}
 
-	void ArgsParser::Add(Argument* arg) {
+	template<typename T>
+	void ArgsParser::Add(Argument<T>* arg) {
 		// Такое имя аргумента может уже существовать
 		for (const auto& existingArg : _args) {
 			if (existingArg->GetLongName() == arg->GetLongName()) {
@@ -63,9 +64,9 @@ namespace args_parse {
 		return OperatorType::Nope;
 	}
 
-	Argument* ArgsParser::FindLongNameArg(std::string item) const
+	ArgumentBase* ArgsParser::FindLongNameArg(std::string item) const
 	{
-		Argument* foundArg = nullptr;
+		ArgumentBase* foundArg = nullptr;
 		int matchingCount = 0;
 
 		for (const auto& arg : _args)
@@ -88,7 +89,7 @@ namespace args_parse {
 		return foundArg;
 	}
 
-	Argument* ArgsParser::FindShortNameArg(std::string item) const
+	ArgumentBase* ArgsParser::FindShortNameArg(std::string item) const
 	{
 		for (const auto& arg : _args)
 		{
@@ -159,7 +160,7 @@ namespace args_parse {
 
 	void ArgsParser::ProcessArgument(BaseParametrs& p_param, int& i) const
 	{
-		Argument* arg = FindArgument(p_param.argName);
+		ArgumentBase* arg = FindArgument(p_param.argName);
 		//ссылка может быть null
 		if (arg != nullptr) {
 			arg->SetIsDefined(true);
@@ -179,7 +180,7 @@ namespace args_parse {
 		}
 	}
 
-	void ArgsParser::ValidationValue(const Validator* validator, BaseParametrs& parametrs, Argument* arg, int& i) const {
+	void ArgsParser::ValidationValue(const Validator* validator, BaseParametrs& parametrs, ArgumentBase* arg, int& i) const {
 		//валидатор может быть null
 		if (validator != nullptr) {
 			std::cout << "\nString: " << parametrs.argStr << " ; Name: " << parametrs.argName << " ;" << std::endl;
@@ -204,9 +205,9 @@ namespace args_parse {
 		}
 	}
 
-	Argument* ArgsParser::FindArgument(const std::string& argName) const
+	ArgumentBase* ArgsParser::FindArgument(const std::string& argName) const
 	{
-		Argument* arg = nullptr;
+		ArgumentBase* arg = nullptr;
 		if (o_type == OperatorType::Long) {
 			arg = FindLongNameArg(argName);
 			return arg;

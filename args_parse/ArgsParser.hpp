@@ -5,7 +5,7 @@
 #include <string>
 
 namespace args_parse {
-	class Argument;
+	class ArgumentBase;
 	/// @brief Перечисление типов оператора (длинный, короткий, неопределенный)
 	enum class OperatorType {
 		Long,
@@ -76,7 +76,8 @@ namespace args_parse {
 			ArgsParser(int argc, const char** argv);
 
 			/// @brief Метод добавления аргумента командной строки в вектор
-			void Add(Argument* arg);
+			template<typename T>
+			void Add(Argument<T>* arg);
 
 			/// @brief Метод парсинга аргументов командной строки.
 			/// Он проходит по каждому аргументу командной строки и проверяет, был ли найден аргумент в векторе
@@ -92,7 +93,7 @@ namespace args_parse {
 
 			/// @brief Метод поиска аргумента.
 			/// В зависимости от оператора вызывает методы поиска короткого или длинного имени.
-			Argument* FindArgument(const std::string& argName) const;
+			ArgumentBase* FindArgument(const std::string& argName) const;
 
 		private:
 			/// @brief Метод для разбора длинных аргументов командной строки.
@@ -108,13 +109,13 @@ namespace args_parse {
 			void ProcessArgument(BaseParametrs& p_param, int& i) const;
 
 			/// @brief Метод валидации значения
-			void ValidationValue(const Validator* validator, BaseParametrs& p_param, Argument* arg, int& i) const;
+			void ValidationValue(const Validator* validator, BaseParametrs& p_param, ArgumentBase* arg, int& i) const;
 
 			/// @brief Метод для поиска длинного имени, если оно есть
-			Argument* FindLongNameArg(std::string item) const;
+			ArgumentBase* FindLongNameArg(std::string item) const;
 
 			/// @brief Метод поиска короткого имени, если оно есть
-			Argument* FindShortNameArg(std::string item) const;
+			ArgumentBase* FindShortNameArg(std::string item) const;
 
 			/// @brief Метод, который проверяет является ли строка оператором.
 			/// Возвращает какой оператор был использован
@@ -125,6 +126,6 @@ namespace args_parse {
 			/// Значения аргументов. Должно быть ровно @a argc.
 			const char** _argv;
 			/// Массив для хранения объектов аргументов командной строки
-			std::vector<Argument*> _args;
+			std::vector<ArgumentBase*> _args;
 	};
 }

@@ -4,7 +4,21 @@
 
 namespace args_parse {
 	class Validator;
-	class Argument {
+
+	class ArgumentBase {
+	public:
+		virtual ~ArgumentBase() {}
+		virtual char GetShortName() const = 0;
+		virtual std::string GetLongName() const = 0;
+		virtual bool HasValue() const = 0;
+		virtual void SetIsDefined(bool isDefined) = 0;
+		virtual const Validator* GetValidator() const = 0;
+		virtual void SetValue(const std::string& value) = 0;
+		virtual std::string GetDescription() const = 0;
+	};
+
+	template<typename T>
+	class Argument : public ArgumentBase {
 	public:
 		/// @brief конструктор класса
 		/// конструктор для случая, когда есть как короткое, так и длинное имя
@@ -17,7 +31,7 @@ namespace args_parse {
 		Argument();
 
 		/// @brief проверка может ли быть у аргумента значение
-		bool HasValue() const { return _isValue; }
+		bool HasValue() const override { return _isValue; }
 
 		///@brief возвращает указатель на объект Validator, используемый для проверки данных.
 		///при отсутствии валидатора возвращается nullptr.
@@ -51,7 +65,7 @@ namespace args_parse {
 		bool GetIsDefined() const { return _isDefined; }
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
-		virtual void SetValue(std::string& value) {
+		void SetValue(const T& value) override {
 		}
 
 	protected:
@@ -68,7 +82,7 @@ namespace args_parse {
 	};
 
 #pragma region StringArg
-	class StringArg : public Argument {
+	class StringArg : public Argument<int> {
 		public:
 			///наследование конструктора базового класса
 			using Argument::Argument;
@@ -77,7 +91,7 @@ namespace args_parse {
 			std::string GetValue();
 
 			///присваивание строкового значения аргументу
-			void SetValue(std::string& value) override;
+			void SetValue(const std::string& value) override;
 
 			/// @brief метод для получения указателя на объект валидатора, связанного с аргументом.
 			///если для данного аргумента не определен валидатор, метод возвращает nullptr.
@@ -90,7 +104,7 @@ namespace args_parse {
 
 #pragma region IntArg
 
-	class IntArg : public Argument {
+	class IntArg : public Argument<std::string> {
 	public:
 		///наследование конструктора базового класса
 		using Argument::Argument;
@@ -100,7 +114,7 @@ namespace args_parse {
 
 		///присваивание числового значения аргументу
 		///value после валидации
-		void SetValue(std::string& value) override;
+		void SetValue(const std::string& value) override;
 
 		/// @brief метод для получения указателя на объект валидатора, связанного с аргументом.
 		///если для данного аргумента не определен валидатор, метод возвращает nullptr.
@@ -114,7 +128,7 @@ namespace args_parse {
 #pragma endregion
 
 #pragma region BoolArg
-	class BoolArg : public Argument {
+	class BoolArg : public Argument<bool> {
 		public:
 			///наследование конструктора базового класса
 			using Argument::Argument;
@@ -122,7 +136,7 @@ namespace args_parse {
 			const Validator* GetValidator() const { return nullptr; }
 
 			///Присваивание булевого значения аргументу
-			void SetValue(std::string& value) override { _value = value; };
+			void SetValue(const std::string& value) override { _value = value; };
 
 		private:
 			std::string _value;
