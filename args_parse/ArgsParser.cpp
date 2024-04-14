@@ -195,7 +195,7 @@ namespace args_parse {
 				}
 			}
 			else if (!parametrs.argValue.empty() && validator->ValidValue(parametrs.argValue)) {
-				arg->SetValue(parametrs.argValue);
+				//arg->SetValue(parametrs.argValue);
 				std::cout << "Value: " << parametrs.argValue << std::endl;
 			}
 			else if (!parametrs.argValue.empty() && !validator->ValidValue(parametrs.argValue)) {

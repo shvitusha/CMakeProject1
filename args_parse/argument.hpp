@@ -8,6 +8,8 @@ namespace args_parse {
 	class SharedValidator;
 	template<typename T>
 	class Validator;
+	template<>
+	class Validator<std::chrono::milliseconds>;
 
 	class ArgumentBase {
 	public:
@@ -51,7 +53,7 @@ namespace args_parse {
 
 		virtual const SharedValidator* GetValidator() const = 0;
 
-		virtual void SetValue(const std::string& value) = 0;
+		//virtual void SetValue(const std::string& value) = 0;
 
 	private:
 		///короткое описание аргумента
@@ -75,14 +77,13 @@ namespace args_parse {
 		///@brief возвращает указатель на объект Validator, используемый для проверки данных.
 		///при отсутствии валидатора возвращается nullptr.
 		const SharedValidator* GetValidator() const override { 
-			static Validator<T> validator;
+			static Validator<T> validator(this);
 			return &validator;
 		}
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
-		void SetValue(const std::string& value) override {
-			std::istringstream iss(value);
-			iss >> _value;
+		void SetValue(const T& value) {
+			_value = value;
 		}
 
 		/// @brief get() для получения значения поля, соответстующего в классе
@@ -92,7 +93,7 @@ namespace args_parse {
 		///значение аргумента
 		T _value;
 	};
-	/*
+
 	template<>
 	class Argument<std::chrono::milliseconds> : public ArgumentBase {
 	private:
@@ -100,22 +101,21 @@ namespace args_parse {
 		std::chrono::milliseconds _value;
 
 	public:
-		///@brief возвращает указатель на объект Validator, используемый для проверки данных.
+		using ArgumentBase::ArgumentBase;
+		///@brief возвращает указатель на объект Validator, используемый дляs проверки данных.
 		///при отсутствии валидатора возвращается nullptr.
 		const SharedValidator* GetValidator() const override {
-			static Validator<std::chrono::milliseconds> validator;
+			static Validator<std::chrono::milliseconds> validator(this);
 			return &validator;
+			//return dynamic_cast<const SharedValidator*>(&validator);
 		}
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
-		void SetValue(const std::string& value) override {
-			// Здесь вы должны преобразовать строковое значение в ваш тип IpAddress
-			// и присвоить его полю _value.
-			// Например:
-			//_value = ParseIpAddress(value);
+		void SetValue(const std::chrono::milliseconds& value) {
+			_value = value;
 		}
 
 		/// @brief get() для получения значения поля, соответстующего в классе
 		std::chrono::milliseconds GetValue() const { return _value; }
-	};*/
+	};
 }

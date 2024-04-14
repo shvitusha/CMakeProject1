@@ -1,5 +1,6 @@
 #pragma once
 #include "argument.hpp"
+#include <iostream>
 #include <vector>
 #include <chrono>
 #include <sstream>
@@ -7,6 +8,10 @@
 
 namespace args_parse {
 	class ArgumentBase;
+	template<typename T>
+	class Argument;
+	template<>
+	class Argument<std::chrono::milliseconds>;
 
 	/// @brief Перечисление типов оператора (длинный, короткий, неопределенный)
 	enum class OperatorType {
@@ -26,24 +31,21 @@ namespace args_parse {
 	class SharedValidator {
 	public:
 		SharedValidator() = default;
-		virtual ~SharedValidator() {}
+		virtual ~SharedValidator(){}
 		virtual bool ValidValue(const std::string& value) const = 0;
 	};
 
 	template<typename T>
 	class Validator : public SharedValidator {
 	public:
+		Validator(Argument<T>* arg) :_arg(arg) {}
 		using SharedValidator::SharedValidator;
+
 		bool ValidValue(const std::string& value) const override {
-			std::string str = value;
-			if (str.empty()) {
+			if (value.empty()) {
 				return false;
 			}
-			std::tuple<bool, std::string> chrono = CheckChronoValue(str);
-			if (std::get<0>(chrono)) {
-				str = std::get<1>(chrono);
-			}
-			std::istringstream iss(str);
+			std::istringstream iss(value);
 			T value_t;
 			if (iss >> value_t) {
 				return Additional(value_t);
@@ -51,6 +53,8 @@ namespace args_parse {
 			return false;
 		}
 	private:
+		Argument<T>* _arg;
+
 		bool Additional(const T& value) const {
 			if constexpr (std::is_same_v<int, T>) {
 				return (value == std::floor(value)) && (value >= std::numeric_limits<int>::min() && value <= std::numeric_limits<int>::max());
@@ -70,29 +74,44 @@ namespace args_parse {
 			else {
 				return false;
 			}
+			_arg->SetValue(value);
+			return true;
 		}
+	};
 
-		std::tuple<bool, std::string> CheckChronoValue(const std::string& value) const {
-			// Проверяем, содержит ли строка подстроку "ms" или "s"
-			bool isMilliseconds = false;
-			bool isSeconds = false;
-			if (value.size() > 2) {
-				std::string suffix = value.substr(value.size() - 2);
-				if (suffix == "ms") {
-					isMilliseconds = true;
-				}
-				else if (suffix == "s") {
-					isSeconds = true;
-				}
-			}
+	template<>
+	class Validator<std::chrono::milliseconds> : public SharedValidator {
+	public:
+		using SharedValidator::SharedValidator;
+		Validator<std::chrono::milliseconds>() = default;
+		Validator<std::chrono::milliseconds>(Argument<std::chrono::milliseconds>* arg) :_arg(arg) {}
 
-			// Удаляем суффикс "ms" или "s" из строки, если он присутствует
-			std::string strippedValue = value;
-			if (isMilliseconds || isSeconds) {
-				strippedValue = value.substr(0, value.size() - 2);
+		bool ValidValue(const std::string& value) const override {
+			long long l_value;
+			std::string unit;
+
+			std::istringstream ss{ value };
+			// Считываем значение и единицу измерения времени из потока
+			ss >> l_value >> unit;
+
+			std::chrono::milliseconds ms;
+
+			// Преобразуем значение и единицу измерения времени в микросекунды
+			if (unit == "ms") {
+				ms = std::chrono::milliseconds(l_value);
 			}
-			return std::make_tuple((isSeconds || isMilliseconds), strippedValue);
+			else if (unit == "s") {
+				ms = std::chrono::seconds(l_value);
+			}
+			else {
+				std::cerr << "Invalid time unit: " << unit << std::endl;
+				return false;
+			}
+			_arg->SetValue(ms);
+			return true;
 		}
+	private:
+		Argument<std::chrono::milliseconds>* _arg;
 	};
 
 #pragma endregion

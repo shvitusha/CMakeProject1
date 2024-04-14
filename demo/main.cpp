@@ -1,5 +1,6 @@
 #include <args_parse/argument.hpp>
 #include <args_parse/ArgsParser.hpp>
+#include <chrono>
 #include <iostream>
 
 int main(int argc, const char** argv)
@@ -20,7 +21,7 @@ int main(int argc, const char** argv)
 	parametr.SetDescription("Definition of constant/precision/parameter with floating sign");
 	args_parse::Argument<unsigned int> thread_pool('t', "thread-pool", true);
 	thread_pool.SetDescription("Sets the number of threads (number)");
-	args_parse::Argument<unsigned int> debug_sleep('d', "debug-sleep", true);
+	args_parse::Argument<std::chrono::milliseconds> debug_sleep('d', "debug-sleep", true);
 	debug_sleep.SetDescription("Defines a user input of the argument type (ms/s)");
 
 	parser.Add(&help);
@@ -52,8 +53,7 @@ int main(int argc, const char** argv)
 			std::cout << "Input t value: " << thread_pool.GetValue() << std::endl;
 		}
 		if (debug_sleep.GetIsDefined()) {
-			//logic input type argument
-			std::cout << "Input p value (float): " << debug_sleep.GetValue() << std::endl;
+			std::cout << "Input d value (ms/s): " << debug_sleep.GetValue().count() << std::endl;
 		}
 		if (parametr.GetIsDefined()) {
 			std::cout << "Input p value (float): " << parametr.GetValue() << std::endl;
