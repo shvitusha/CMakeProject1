@@ -3,6 +3,7 @@
 #include <string>
 #include <chrono>
 #include <sstream>
+#include <optional>
 
 namespace args_parse {
 	class SharedValidator;
@@ -25,22 +26,22 @@ namespace args_parse {
 		ArgumentBase() : ArgumentBase('\0', "", false) {}
 
 		/// @brief проверка может ли быть у аргумента значение
-		bool HasValue() const { return _isValue; }
+		[[nodiscard]] bool HasValue() const { return _isValue; }
 
 		/// @brief get() для получения значени¤ поля, соответстующего в классе
-		std::string GetLongName() const { return _longName; }
+		[[nodiscard]] std::string GetLongName() const { return _longName; }
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
 		void SetLongName(const char* longName) { _longName = longName; }
 
 		/// @brief get() для получения значения поля, соответстующего в классе
-		char GetShortName() const { return _shortName; }
+		[[nodiscard]] char GetShortName() const { return _shortName; }
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
 		void SetShortName(const char shortName) { _shortName = shortName; }
 
 		/// @brief get() для получения значения поля, соответстующего в классе
-		std::string GetDescription() const { return _description; }
+		[[nodiscard]] std::string GetDescription() const { return _description; }
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
 		void SetDescription(const std::string& description) { _description = description; }
@@ -49,9 +50,9 @@ namespace args_parse {
 		void SetIsDefined(const bool isDefined) { _isDefined = isDefined; }
 
 		/// @brief get() для получения значения поля, соответстующего в классе
-		bool GetIsDefined() const { return _isDefined; }
+		[[nodiscard]] bool GetIsDefined() const { return _isDefined; }
 
-		virtual const SharedValidator* GetValidator() const = 0;
+		[[nodiscard]] virtual const SharedValidator* GetValidator() const = 0;
 
 		//virtual void SetValue(const std::string& value) = 0;
 
@@ -76,7 +77,7 @@ namespace args_parse {
 
 		///@brief возвращает указатель на объект Validator, используемый для проверки данных.
 		///при отсутствии валидатора возвращается nullptr.
-		const SharedValidator* GetValidator() const override { 
+		[[nodiscard]] const SharedValidator* GetValidator() const override {
 			static Validator<T> validator(this);
 			return &validator;
 		}
@@ -87,11 +88,11 @@ namespace args_parse {
 		}
 
 		/// @brief get() для получения значения поля, соответстующего в классе
-		T GetValue() const { return _value; }
+		[[nodiscard]] T GetValue() const { return _value; }
 
 	protected:
 		///значение аргумента
-		T _value;
+		std::optional<T> _value;
 	};
 
 	template<>
@@ -104,7 +105,7 @@ namespace args_parse {
 		using ArgumentBase::ArgumentBase;
 		///@brief возвращает указатель на объект Validator, используемый дляs проверки данных.
 		///при отсутствии валидатора возвращается nullptr.
-		const SharedValidator* GetValidator() const override {
+		[[nodiscard]] const SharedValidator* GetValidator() const override {
 			static Validator<std::chrono::milliseconds> validator(this);
 			return &validator;
 			//return dynamic_cast<const SharedValidator*>(&validator);
@@ -116,6 +117,6 @@ namespace args_parse {
 		}
 
 		/// @brief get() для получения значения поля, соответстующего в классе
-		std::chrono::milliseconds GetValue() const { return _value; }
+		[[nodiscard]] std::chrono::milliseconds GetValue() const { return _value; }
 	};
 }

@@ -5,6 +5,7 @@
 #include <chrono>
 #include <sstream>
 #include <string>
+#include <string_view>
 
 namespace args_parse {
 	class ArgumentBase;
@@ -21,9 +22,9 @@ namespace args_parse {
 	};
 	/// @brief Структура для определения параметров
 	struct BaseParametrs {
-		const std::string& argStr;
-		std::string& argName;
-		std::string& argValue;
+		std::string_view argStr;
+		std::string_view argName;
+		std::string_view argValue;
 	};
 
 #pragma region Validation
@@ -32,7 +33,7 @@ namespace args_parse {
 	public:
 		SharedValidator() = default;
 		virtual ~SharedValidator(){}
-		virtual bool ValidValue(const std::string& value) const = 0;
+		[[nodiscard]] virtual bool ValidValue(const std::string& value) const = 0;
 	};
 
 	template<typename T>
@@ -41,12 +42,13 @@ namespace args_parse {
 		Validator(Argument<T>* arg) :_arg(arg) {}
 		using SharedValidator::SharedValidator;
 
-		bool ValidValue(const std::string& value) const override {
+		[[nodiscard]] bool ValidValue(const std::string& value) const override {
 			if (value.empty()) {
 				return false;
 			}
 			std::istringstream iss(value);
-			T value_t;
+			std::optional<T> value_t;
+
 			if (iss >> value_t) {
 				return Additional(value_t);
 			}
@@ -55,7 +57,7 @@ namespace args_parse {
 	private:
 		Argument<T>* _arg;
 
-		bool Additional(const T& value) const {
+		[[nodiscard]] bool Additional(const T& value) const {
 			if constexpr (std::is_same_v<int, T>) {
 				return (value == std::floor(value)) && (value >= std::numeric_limits<int>::min() && value <= std::numeric_limits<int>::max());
 			}
@@ -84,9 +86,9 @@ namespace args_parse {
 	public:
 		using SharedValidator::SharedValidator;
 		Validator<std::chrono::milliseconds>() = default;
-		Validator<std::chrono::milliseconds>(Argument<std::chrono::milliseconds>* arg) :_arg(arg) {}
+		Validator<std::chrono::milliseconds>(Argument<std::chrono::milliseconds>* arg) : _arg(arg) {}
 
-		bool ValidValue(const std::string& value) const override {
+		[[nodiscard]] bool ValidValue(const std::string& value) const override {
 			long long l_value;
 			std::string unit;
 
@@ -127,7 +129,7 @@ namespace args_parse {
 
 		/// @brief Метод парсинга аргументов командной строки.
 		/// Он проходит по каждому аргументу командной строки и проверяет, был ли найден аргумент в векторе
-		bool Parse();
+		[[nodiscard]] bool Parse();
 
 		/// @brief Метод для вывода справки об использовании программы.
 		/// Выводит описание всех добавленных аргументов командной строки
@@ -139,33 +141,33 @@ namespace args_parse {
 
 		/// @brief Метод поиска аргумента.
 		/// В зависимости от оператора вызывает методы поиска короткого или длинного имени.
-		ArgumentBase* FindArgument(const std::string& argName) const;
+		[[nodiscard]] ArgumentBase* FindArgument(std::string_view argName) const;
 
 	private:
 		/// @brief Метод для разбора длинных аргументов командной строки.
 		/// Извлекает имя и значение аргумента для дальнейшей обработки.
-		void ParseLongArgument(BaseParametrs& p_param);
+		[[nodiscard]] BaseParametrs ParseLongArgument(BaseParametrs p_param);
 
 		/// @brief Метод для разбора коротких аргументов командной строки.
 		/// Извлекает имя и значение аргумента для дальнейшей обработки.
-		void ParseShortArgument(BaseParametrs& p_param) const;
+		[[nodiscard]] BaseParametrs ParseShortArgument(BaseParametrs p_param) const;
 
 		/// @brief Метод для обработки одного аргумента командной строки.
 		/// Также проверяет его наличие, наличие у него значения, если да, то его проверку.
-		void ProcessArgument(BaseParametrs& p_param, int& i) const;
+		void ProcessArgument(BaseParametrs p_param, int& i) const;
 
 		/// @brief Метод валидации значения
-		void ValidationValue(const SharedValidator* validator, BaseParametrs& p_param, ArgumentBase* arg, int& i) const;
+		void ValidationValue(const SharedValidator* validator, BaseParametrs p_param, ArgumentBase* arg, int& i) const;
 
 		/// @brief Метод для поиска длинного имени, если оно есть
-		ArgumentBase* FindLongNameArg(std::string item) const;
+		[[nodiscard]] ArgumentBase* FindLongNameArg(const std::string& item) const;
 
 		/// @brief Метод поиска короткого имени, если оно есть
-		ArgumentBase* FindShortNameArg(std::string item) const;
+		[[nodiscard]] ArgumentBase* FindShortNameArg(const std::string& item) const;
 
 		/// @brief Метод, который проверяет является ли строка оператором.
 		/// Возвращает какой оператор был использован
-		OperatorType IsOperator(std::string operatString);
+		[[nodiscard]] OperatorType IsOperator(std::string_view operatString);
 
 		/// Сколько всего аргументов.
 		int _argc;
