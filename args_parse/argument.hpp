@@ -52,7 +52,8 @@ namespace args_parse {
 		/// @brief get() для получения значения поля, соответстующего в классе
 		[[nodiscard]] bool GetIsDefined() const { return _isDefined; }
 
-		[[nodiscard]] virtual const SharedValidator* GetValidator() const = 0;
+		//[[nodiscard]] virtual const SharedValidator* GetValidator() const = 0;
+		[[nodiscard]] virtual bool IsValidatorExist() const = 0;
 
 		//virtual void SetValue(const std::string& value) = 0;
 
@@ -66,8 +67,7 @@ namespace args_parse {
 		///флаг на наличие параметра
 		bool _isValue;
 		///флаг на определение аргумента
-		bool _isDefined;
-		///значение аргумента
+		bool _isDefined;		
 	};
 
 	template<typename T>
@@ -75,24 +75,32 @@ namespace args_parse {
 	public:
 		using ArgumentBase::ArgumentBase;
 
-		///@brief возвращает указатель на объект Validator, используемый для проверки данных.
-		///при отсутствии валидатора возвращается nullptr.
-		[[nodiscard]] const SharedValidator* GetValidator() const override {
-			static Validator<T> validator(this);
-			return &validator;
-		}
+		/// @brief конструктор класса
+		/// конструктор для случая, когда есть как короткое, так и длинное имя
+		Argument::Argument(char shortName, const char* longName, bool isValue, Validator<T>* validator) :
+			ArgumentBase(shortName, longName, isValue), _validator(validator) {}
+
+		/// конструктор для случая, когда нет короткого имени
+		Argument::Argument(const char* longName, bool isValue, Validator<T>* validator) : 
+			ArgumentBase('\0', longName, isValue), _validator(validator) {}
 
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
 		void SetValue(const T& value) {
 			_value = value;
 		}
-
+		bool IsValidatorExist() const override
+		{
+			if (_validator == nullptr) return false;
+			return true;
+		}
 		/// @brief get() для получения значения поля, соответстующего в классе
 		[[nodiscard]] T GetValue() const { return _value; }
 
 	protected:
 		///значение аргумента
 		std::optional<T> _value;
+		/// валидатор
+		Validator<T>* _validator;
 	};
 
 	template<>
@@ -100,20 +108,30 @@ namespace args_parse {
 	private:
 		///значение аргумента
 		std::chrono::milliseconds _value;
+		/// валидатор
+		Validator<std::chrono::milliseconds>* _validator;
 
 	public:
-		using ArgumentBase::ArgumentBase;
-		///@brief возвращает указатель на объект Validator, используемый дляs проверки данных.
-		///при отсутствии валидатора возвращается nullptr.
-		[[nodiscard]] const SharedValidator* GetValidator() const override {
-			static Validator<std::chrono::milliseconds> validator(this);
-			return &validator;
-			//return dynamic_cast<const SharedValidator*>(&validator);
-		}
+		/// @brief конструктор класса
+		/// конструктор для случая, когда есть как короткое, так и длинное имя
+		Argument::Argument(char shortName, const char* longName, bool isValue, Validator<std::chrono::milliseconds>* validator = nullptr) :
+			ArgumentBase(shortName, longName, isValue), _validator(validator) {}
 
+		/// конструктор для случая, когда нет короткого имени
+		Argument::Argument(const char* longName, bool isValue, Validator<std::chrono::milliseconds>* validator = nullptr) :
+			ArgumentBase('\0', longName, isValue), _validator(validator) {}
+
+		using ArgumentBase::ArgumentBase;
+		
 		/// @brief метод set() для присваивания значения полю, соответстующему в классе
 		void SetValue(const std::chrono::milliseconds& value) {
 			_value = value;
+		}
+
+		bool IsValidatorExist() const override
+		{
+			if (_validator == nullptr) return false;
+			return true;
 		}
 
 		/// @brief get() для получения значения поля, соответстующего в классе

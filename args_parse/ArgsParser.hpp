@@ -28,21 +28,13 @@ namespace args_parse {
 	};
 
 #pragma region Validation
-	///Абстрактный базовый класс для валидаторов значений
-	class SharedValidator {
-	public:
-		SharedValidator() = default;
-		virtual ~SharedValidator(){}
-		[[nodiscard]] virtual bool ValidValue(const std::string& value) const = 0;
-	};
-
+	
 	template<typename T>
-	class Validator : public SharedValidator {
+	class Validator {
 	public:
-		Validator(Argument<T>* arg) :_arg(arg) {}
-		using SharedValidator::SharedValidator;
+		Validator() = default;
 
-		[[nodiscard]] bool ValidValue(const std::string& value) const override {
+		[[nodiscard]] bool ValidValue(const std::string& value) const {
 			if (value.empty()) {
 				return false;
 			}
@@ -55,7 +47,6 @@ namespace args_parse {
 			return false;
 		}
 	private:
-		Argument<T>* _arg;
 
 		[[nodiscard]] bool Additional(const T& value) const {
 			if constexpr (std::is_same_v<int, T>) {
@@ -76,19 +67,16 @@ namespace args_parse {
 			else {
 				return false;
 			}
-			_arg->SetValue(value);
 			return true;
 		}
 	};
 
 	template<>
-	class Validator<std::chrono::milliseconds> : public SharedValidator {
+	class Validator<std::chrono::milliseconds> {
 	public:
-		using SharedValidator::SharedValidator;
 		Validator<std::chrono::milliseconds>() = default;
-		Validator<std::chrono::milliseconds>(Argument<std::chrono::milliseconds>* arg) : _arg(arg) {}
 
-		[[nodiscard]] bool ValidValue(const std::string& value) const override {
+		[[nodiscard]] bool ValidValue(const std::string& value) const {
 			long long l_value;
 			std::string unit;
 
@@ -109,11 +97,8 @@ namespace args_parse {
 				std::cerr << "Invalid time unit: " << unit << std::endl;
 				return false;
 			}
-			_arg->SetValue(ms);
 			return true;
 		}
-	private:
-		Argument<std::chrono::milliseconds>* _arg;
 	};
 
 #pragma endregion
@@ -141,7 +126,7 @@ namespace args_parse {
 
 		/// @brief Метод поиска аргумента.
 		/// В зависимости от оператора вызывает методы поиска короткого или длинного имени.
-		[[nodiscard]] ArgumentBase* FindArgument(std::string_view argName) const;
+		[[nodiscard]] ArgumentBase* FindArgument(BaseParametrs param) const;
 
 	private:
 		/// @brief Метод для разбора длинных аргументов командной строки.
@@ -157,13 +142,13 @@ namespace args_parse {
 		void ProcessArgument(BaseParametrs p_param, int& i) const;
 
 		/// @brief Метод валидации значения
-		void ValidationValue(const SharedValidator* validator, BaseParametrs p_param, ArgumentBase* arg, int& i) const;
+		void ValidationValue(BaseParametrs p_param, ArgumentBase* arg, int& i) const;
 
 		/// @brief Метод для поиска длинного имени, если оно есть
-		[[nodiscard]] ArgumentBase* FindLongNameArg(const std::string& item) const;
+		[[nodiscard]] ArgumentBase* FindLongNameArg(std::string_view item) const;
 
 		/// @brief Метод поиска короткого имени, если оно есть
-		[[nodiscard]] ArgumentBase* FindShortNameArg(const std::string& item) const;
+		[[nodiscard]] ArgumentBase* FindShortNameArg(std::string_view item) const;
 
 		/// @brief Метод, который проверяет является ли строка оператором.
 		/// Возвращает какой оператор был использован

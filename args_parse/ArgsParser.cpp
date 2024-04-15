@@ -5,8 +5,6 @@
 #include <algorithm>
 
 namespace args_parse {
-	//****
-	OperatorType o_type;
 	const static int StartingPosition = 0;
 	const static int LenghtOneChar = 1;
 	const static int LenghtTwoChar = 2;
@@ -65,7 +63,7 @@ namespace args_parse {
 		return OperatorType::Nope;
 	}
 
-	ArgumentBase* ArgsParser::FindLongNameArg(const std::string& item) const
+	ArgumentBase* ArgsParser::FindLongNameArg(std::string_view item) const
 	{
 		ArgumentBase* foundArg = nullptr;
 		int matchingCount = 0;
@@ -90,7 +88,7 @@ namespace args_parse {
 		return foundArg;
 	}
 
-	ArgumentBase* ArgsParser::FindShortNameArg(const std::string& item) const
+	ArgumentBase* ArgsParser::FindShortNameArg(std::string_view item) const
 	{
 		for (const auto& arg : _args)
 		{
@@ -107,7 +105,7 @@ namespace args_parse {
 	{
 		for (int i = 1; i < _argc; ++i) {
 			std::string_view argStr(_argv[i]);
-			o_type = IsOperator(argStr);
+			OperatorType o_type = IsOperator(argStr);
 			std::string_view argName;
 			std::string_view argValue;
 			BaseParametrs parametrs{ argStr, argName, argValue };
@@ -162,7 +160,7 @@ namespace args_parse {
 
 	void ArgsParser::ProcessArgument(BaseParametrs p_param, int& i) const
 	{
-		ArgumentBase* arg = FindArgument(p_param.argName);
+		ArgumentBase* arg = FindArgument(p_param);
 		//ссылка может быть null
 		if (arg != nullptr) {
 			arg->SetIsDefined(true);
@@ -173,8 +171,7 @@ namespace args_parse {
 					std::cerr << errorMessage << std::endl;
 					return;
 				}
-				const SharedValidator* validator = arg->GetValidator();
-				ValidationValue(validator, p_param, arg, i);
+				ValidationValue(p_param, arg, i);
 			}
 		}
 		else {
@@ -182,40 +179,40 @@ namespace args_parse {
 		}
 	}
 
-	void ArgsParser::ValidationValue(const SharedValidator* validator, BaseParametrs parametrs, ArgumentBase* arg, int& i) const {
+	void ArgsParser::ValidationValue(BaseParametrs parametrs, ArgumentBase* arg, int& i) const {
 		//валидатор может быть null
-		if (validator != nullptr) {
-			std::cout << "\nString: " << parametrs.argStr << " ; Name: " << parametrs.argName << " ;" << std::endl;
-			//в случае, если аргумент принимает значение, значение может быть пустым
-			if (parametrs.argValue.empty()) {
-				if (i + 1 < _argc) {
-					parametrs.argValue = _argv[i + 1];
-					++i;
-				}
-				else {
-					std::string errorMessage = "Missing value for argument: " + std::string(parametrs.argName);
-					throw std::invalid_argument(errorMessage);
-				}
+		std::cout << "\nString: " << parametrs.argStr << " ; Name: " << parametrs.argName << " ;" << std::endl;
+		//в случае, если аргумент принимает значение, значение может быть пустым
+		if (parametrs.argValue.empty()) {
+			if (i + 1 < _argc) {
+				parametrs.argValue = _argv[i + 1];
+				++i;
 			}
-			//else if (!parametrs.argValue.empty() && validator->ValidValue(parametrs.argValue)) {
-			//	//arg->SetValue(parametrs.argValue);
-			//	std::cout << "Value: " << parametrs.argValue << std::endl;
-			//}
-			//else if (!parametrs.argValue.empty() && !validator->ValidValue(parametrs.argValue)) {
-			//	std::cerr << "Invalid value for argument: " << parametrs.argStr << std::endl;
-			//}
+			else {
+				std::string errorMessage = "Missing value for argument: " + std::string(parametrs.argName);
+				throw std::invalid_argument(errorMessage);
+			}
 		}
+		//else if (!parametrs.argValue.empty() && validator->ValidValue(parametrs.argValue)) {
+		//	//arg->SetValue(parametrs.argValue);
+		//	std::cout << "Value: " << parametrs.argValue << std::endl;
+		//}
+		//else if (!parametrs.argValue.empty() && !validator->ValidValue(parametrs.argValue)) {
+		//	std::cerr << "Invalid value for argument: " << parametrs.argStr << std::endl;
+		//}
+
 	}
 
-	ArgumentBase* ArgsParser::FindArgument(std::string_view argName) const
+	ArgumentBase* ArgsParser::FindArgument(BaseParametrs param) const
 	{
+		OperatorType o_type = IsOperator(param.argStr);
 		ArgumentBase* arg = nullptr;
 		if (o_type == OperatorType::Long) {
-			arg = FindLongNameArg(argName);
+			arg = FindLongNameArg(param.argName);
 			//return arg;
 		}
 		else if (o_type == OperatorType::Short) {
-			arg = FindShortNameArg(argName);
+			arg = FindShortNameArg(param.argName);
 			//return arg;
 		}
 		return arg;
